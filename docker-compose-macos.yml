@@ -1,9 +1,0 @@
-version: '3.4'
-
-volumes:
-  orocommerce-fpm-appcode:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=host.docker.internal,rw,noacl,hard,intr,nfsvers=3
-      device: ":${COMPOSE_PROJECT_APPDIR:-$PWD}"

@@ -68,7 +68,6 @@ export ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}
 export ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}
 export ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}
 
-
 if [[ ! -d "${COMPOSE_PROJECT_CONFIG_DIR}" ]];then
     mkdir -p "${COMPOSE_PROJECT_CONFIG_DIR}"
 fi
@@ -92,26 +91,20 @@ else
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-dummy.yml"
 fi
 
-if [[ "$COMPOSE_PROJECT_MODE" == "mutagen" ]]; then
-  if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml" ]]; then
-      DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml"
-  fi
-else
-  if [[ "$OSTYPE" == "darwin"* ]] && ps aux | grep -v 'grep' | grep nfsd > /dev/null 2>&1; then
-    if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-macos.yml" ]]; then
-      DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-macos.yml"
-    fi
-  fi
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export COMPOSE_PROJECT_MODE="mutagen"
 fi
 
 if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml" ]]; then
+  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml"
+  MUTAGEN_SESSION_NAME=$(echo ${COMPOSE_PROJECT_NAME}-appcode | awk '{print tolower($0)}' | sed 's/[^0-9a-z]/-/g')
   WAIT_SYNC="1"
   if docker volume ls | grep "^${COMPOSE_PROJECT_NAME}_appcode$" > /dev/null 2>&1; then
     if [[ $(docker volume inspect -f '{{ .Options.type }}' ${COMPOSE_PROJECT_NAME}_appcode) == "nfs" ]]; then
       docker volume rm ${COMPOSE_PROJECT_NAME}_appcode
     fi
   fi
-  MUTAGEN_SESSION_NAME=$(echo ${COMPOSE_PROJECT_NAME}-appcode | awk '{print tolower($0)}' | sed 's/[^0-9a-z]/-/g')
+
   if [[ $1 == "down" ]]; then
     if mutagen sync list | grep -i "Name: ${MUTAGEN_SESSION_NAME}" > /dev/null 2>&1; then
       mutagen sync terminate "${MUTAGEN_SESSION_NAME}"

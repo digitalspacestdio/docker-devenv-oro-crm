@@ -1,19 +1,9 @@
 # OroCommerce|OroCRM|OroPlatform Docker Environment
 
-## Pre-requirements (MacOs only)
-Configure and start nfs
-```bash
-echo "$HOME -alldirs -mapall=$UID:20 localhost" | sudo tee -a /etc/exports
-echo "nfs.server.mount.require_resv_port = 0" | sudo tee -a /etc/nfs.conf
-```
-
-Start the NFS server
-```bash
-sudo nfsd restart
-```
+## Pre-requirements (MacOs/Linux/Windows)
+Install Homebrew by following guide https://docs.brew.sh/Installation
 
 ## Usage
-
 Export your composer auth tokens
 If you use github only
 ```bash
@@ -74,9 +64,14 @@ Destroy the whole data
 docker-compose-oroplatform down -v
 ```
 
-## Mutagen Integration
-
-To use mutagen integration just define environment variable
-```bash
-export COMPOSE_PROJECT_MODE=mutagen
-```
+## Supported Environment Variables
+* `COMPOSE_PROJECT_MODE` - (`mutagen`|`default`)
+* `COMPOSE_PROJECT_PHP_VERSION` - (`7.1`|`7.2`|`7.3`|`7.4`|`8.0`)
+* `COMPOSE_PROJECT_NAME` - by default the project directory will be used
+* `COMPOSE_PROJECT_PORT_PREFIX` - `302` by default
+* `COMPOSE_PROJECT_PORT_HTTP` - `$COMPOSE_PROJECT_PORT_PREFIX` + `80` by default
+* `COMPOSE_PROJECT_PORT_XHGUI` - `$COMPOSE_PROJECT_PORT_PREFIX` + `81` by default
+* `COMPOSE_PROJECT_PORT_MYSQL` - `$COMPOSE_PROJECT_PORT_PREFIX` + `06` by default
+* `COMPOSE_PROJECT_PORT_PGSQL` - `$COMPOSE_PROJECT_PORT_PREFIX` + `32` by default
+* `COMPOSE_PROJECT_PORT_ELASTICSEARCH` - `$COMPOSE_PROJECT_PORT_PREFIX` + `92` by default
+* `COMPOSE_PROJECT_PORT_MAIL_WEBGUI` - `$COMPOSE_PROJECT_PORT_PREFIX` + `25` by default
