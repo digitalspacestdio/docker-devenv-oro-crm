@@ -31,7 +31,7 @@ export COMPOSE_PROJECT_COMPOSER_AUTH='{
 ```
 If you want use specific php version just export environment variable:
 ```bash
-export PHP_VERSION=7.4
+export COMPOSE_PROJECT_PHP_VERSION=7.4
 ```
 > following versions are supported: 7.2, 7.3, 7.4, 8.0
 

@@ -59,7 +59,6 @@ export COMPOSE_PROJECT_COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH-${COMPOSER_
 export COMPOSE_PROJECT_CONFIG_DIR="$HOME/.$(basename $0)/${COMPOSE_PROJECT_NAME}"
 
 export ORO_DB_HOST=${ORO_DB_HOST-database}
-export ORO_DB_PORT=${ORO_DB_PORT-3306}
 export ORO_DB_NAME=${ORO_DB_NAME-application}
 export ORO_DB_USER=${ORO_DB_USER-application}
 export ORO_DB_PASSWORD=${ORO_DB_PASSWORD-application}
@@ -85,8 +84,10 @@ fi
 
 if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
   if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
+    export ORO_DB_PORT=${ORO_DB_PORT-5432}
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-pgsql.yml"
   elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
+    export ORO_DB_PORT=${ORO_DB_PORT-3306}
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mysql.yml"
   fi
   if ${DOCKER_COMPOSE_BIN} ps --services | grep database; then
