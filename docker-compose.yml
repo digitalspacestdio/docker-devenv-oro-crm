@@ -18,11 +18,18 @@ services:
     networks:
       - 'appnet'
     environment:
+      - 'ORO_DB_HOST=${ORO_DB_HOST-database}'
+      - 'ORO_DB_PORT=${ORO_DB_PORT-3306}'
+      - 'ORO_DB_NAME=${ORO_DB_NAME-application}'
+      - 'ORO_DB_USER=${ORO_DB_USER-application}'
+      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD-application}'
+      - 'ORO_MAILER_DRIVER=${ORO_MAILER_DRIVER-smtp}'
+      - 'ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}'
+      - 'ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}'
+      - 'ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}'
       - 'XHGUI_MONGO_HOSTNAME=mongodb'
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=$COMPOSE_PROJECT_COMPOSER_AUTH'
-    env_file:
-      - .env
     depends_on:
       database:
         condition: service_healthy
@@ -53,11 +60,18 @@ services:
     networks:
       - 'appnet'
     environment:
+      - 'ORO_DB_HOST=${ORO_DB_HOST-database}'
+      - 'ORO_DB_PORT=${ORO_DB_PORT-3306}'
+      - 'ORO_DB_NAME=${ORO_DB_NAME-application}'
+      - 'ORO_DB_USER=${ORO_DB_USER-application}'
+      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD-application}'
+      - 'ORO_MAILER_DRIVER=${ORO_MAILER_DRIVER-smtp}'
+      - 'ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}'
+      - 'ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}'
+      - 'ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}'
       - 'XHGUI_MONGO_HOSTNAME=mongodb'
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=$COMPOSE_PROJECT_COMPOSER_AUTH'
-    env_file:
-      - .env
     networks:
       - 'appnet'
     depends_on:
