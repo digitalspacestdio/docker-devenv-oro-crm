@@ -83,7 +83,7 @@ if [[ -z $ORO_DB_DRIVER ]] && [[ -f "$COMPOSE_PROJECT_APPDIR/config/parameters.y
   export ORO_DB_DRIVER=$(echo $(cat "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" | grep 'database_driver:' | awk -F: '{ print $2 }'))
 fi
 
-if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] && [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
+if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
   if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-pgsql.yml"
   elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
