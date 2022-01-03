@@ -85,11 +85,11 @@ if [[ -z $ORO_DB_DRIVER ]] && [[ -f "$COMPOSE_PROJECT_APPDIR/config/parameters.y
 fi
 
 if [[ $ORO_DB_DRIVER = "pdo_pgsql" ]];then
-  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f docker-compose-pgsql.yml"
-else if [[ $ORO_DB_DRIVER = "pdo_mysql" ]];
-  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f docker-compose-mysql.yml"
+  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-pgsql.yml"
+elif [[ $ORO_DB_DRIVER = "pdo_mysql" ]];then
+  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mysql.yml"
 else
-  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f docker-compose-dummy.yml"
+  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-dummy.yml"
 fi
 
 if [[ "$COMPOSE_PROJECT_MODE" == "mutagen" ]]; then
