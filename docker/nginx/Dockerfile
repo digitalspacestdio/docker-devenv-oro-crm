@@ -10,4 +10,4 @@ ARG nginx_gid=1000
 # nginx. This is where we override their respective uid and guid to something
 # else that lines up better with file permissions.
 # The -o switch allows reusing an existing user id
-RUN usermod -u $nginx_uid -o nginx && groupmod -g $nginx_gid -o nginx
+RUN usermod -u $nginx_uid -o www-data && groupmod -g $nginx_gid -o www-data
