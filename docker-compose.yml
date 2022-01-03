@@ -30,6 +30,7 @@ services:
       - 'XHGUI_MONGO_HOSTNAME=mongodb'
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=$COMPOSE_PROJECT_COMPOSER_AUTH'
+      - 'NODE_OPTIONS="--max-old-space-size=1024"'
     depends_on:
       database:
         condition: service_healthy
@@ -72,6 +73,7 @@ services:
       - 'XHGUI_MONGO_HOSTNAME=mongodb'
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=$COMPOSE_PROJECT_COMPOSER_AUTH'
+      - 'NODE_OPTIONS="--max-old-space-size=1024"'
     networks:
       - 'appnet'
     depends_on:
