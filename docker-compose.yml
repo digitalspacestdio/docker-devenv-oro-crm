@@ -153,7 +153,8 @@ services:
 
 
   nginx:
-    image: 'nginx'
+    image: 'nginx:1.21-oroplatform'
+    build: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/nginx"
     depends_on:
       fpm:
         condition: service_healthy
