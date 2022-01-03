@@ -36,23 +36,10 @@ Clone this repo
 brew install digitalspacestdio/docker-compose-oroplatform/docker-compose-oroplatform
 ```
 
-Go to the working dir
+Clone you code and navigate to the directory
 ```bash
-cd docker-env-oroplatform
-```
-
-Put your code to the `www` folder
-```bash
-git clone --single-branch --branch 4.2.7 git@github.com:oroinc/orocommerce-application.git www
-```
-
-Create the `.env` file
-```bash
-# if you want to use mysql
-cp .env.dist.mysql .env
-
-# if you want to use postgresql
-cp .env.dist.pgsql .env
+git clone --single-branch --branch 4.2.7 git@github.com:oroinc/orocommerce-application.git ~/orocommerce-application
+cd ~/orocommerce-application
 ```
 
 Install dependencies
