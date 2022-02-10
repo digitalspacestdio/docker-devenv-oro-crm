@@ -94,7 +94,7 @@ if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "pdo_mysql" ]];th
     export ORO_DB_PORT=${ORO_DB_PORT-3306}
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mysql.yml"
   fi
-  if ${DOCKER_COMPOSE_BIN} ps --services | grep database; then
+  if ${DOCKER_COMPOSE_BIN} ps --services | grep database > /dev/null; then
     SERVICE_DATABASE_ID=$(${DOCKER_COMPOSE_BIN} ps -q database)
     if [[ "" != $SERVICE_DATABASE_ID ]] && docker inspect -f '{{ .Config.Image }}' "$SERVICE_DATABASE_ID" | grep 'busybox'; then
       ${DOCKER_COMPOSE_BIN} stop database
