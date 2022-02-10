@@ -7,6 +7,7 @@ HOST_MACHINE_IP=${HOST_MACHINE_IP:-'172.17.0.1'}
 cd $(readlink /home/linuxbrew/.linuxbrew/etc/php/current)
 sed 's/xdebug.client_host=.*/xdebug.client_host='$HOST_MACHINE_IP'/g' php.ini.dist > php.ini
 sed -i 's/apc.enabled=.*/apc.enabled=0/g' /home/linuxbrew/.linuxbrew/etc/php/current/conf.d/ext-apcu.ini
+sed -i 's/apc.enable_cli=.*/apc.enable_cli=0/g' /home/linuxbrew/.linuxbrew/etc/php/current/conf.d/ext-apcu.ini
 
 cd /var/www
 
