@@ -5,7 +5,7 @@ services:
     image: "digitalspacestudio/php-node:${COMPOSE_PROJECT_PHP_VERSION-8.0}-${COMPOSE_PROJECT_NODE_VERSION-14}"
     user: root
     volumes:
-      - 'appcode:/var/www'
+      - 'appcode:/var/www:consistent'
       - 'npm:/home/linuxbrew/.npm'
       - 'composer:/home/linuxbrew/.composer'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/php-fpm.conf:/home/linuxbrew/.linuxbrew/etc/php/${COMPOSE_PROJECT_PHP_VERSION-8.0}/php-fpm.conf:ro'
@@ -47,7 +47,7 @@ services:
     image: "digitalspacestudio/php-node:${COMPOSE_PROJECT_PHP_VERSION-8.0}-${COMPOSE_PROJECT_NODE_VERSION-14}"
     user: root
     volumes:
-      - 'appcode:/var/www'
+      - 'appcode:/var/www:consistent'
       - 'npm:/home/linuxbrew/.npm'
       - 'composer:/home/linuxbrew/.composer'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/cli/php.ini:/home/linuxbrew/.linuxbrew/etc/php/${COMPOSE_PROJECT_PHP_VERSION-8.0}/php.ini.dist:ro'

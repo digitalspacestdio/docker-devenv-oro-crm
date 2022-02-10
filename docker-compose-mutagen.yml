@@ -5,7 +5,7 @@ services:
     image: "digitalspacestudio/php-node:${COMPOSE_PROJECT_PHP_VERSION-8.0}-${COMPOSE_PROJECT_NODE_VERSION-14}"
     user: root
     volumes:
-      - 'appcode:/var/www'
+      - 'appcode:/var/www:consistent'
     command: "bash -c 'chown linuxbrew:linuxbrew /var/www; sleep infinity'"
     working_dir: '/var/www'
     networks:
