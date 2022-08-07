@@ -90,7 +90,7 @@ services:
     image: "mailhog/mailhog"
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_mail
     ports:
-      - "${COMPOSE_PROJECT_PORT_PREFIX:-80}25:8025"
+      - "${COMPOSE_PROJECT_MAIL_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-80}25:8025"
     networks:
       - 'appnet'
     restart: on-failure:3
@@ -109,7 +109,7 @@ services:
       - XHGUI_MONGO_HOSTNAME=mongodb
       - XHGUI_MONGO_DATABASE=xhprof
     ports:
-      - "${COMPOSE_PROJECT_PORT_PREFIX}81:80"
+      - "${COMPOSE_PROJECT_XHGUI_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX}81:80"
     depends_on:
       mongodb:
         condition: service_healthy
@@ -148,7 +148,7 @@ services:
       ES_JAVA_OPTS: '${ES_JAVA_OPTS:--Xms256m -Xmx2048m}'
       discovery.type: 'single-node'
     ports:
-      - "${COMPOSE_PROJECT_PORT_PREFIX:-92}92:9200"
+      - "${COMPOSE_PROJECT_ES_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-92}92:9200"
     networks:
       - 'appnet'
     restart: on-failure:3

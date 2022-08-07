@@ -13,7 +13,7 @@ services:
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/pgsql/initdb.d:/docker-entrypoint-initdb.d:ro'
       - 'postgresql-data:/var/lib/postgresql/data:delegated'
     ports:
-      - '${COMPOSE_PROJECT_PORT_PGSQL:-5432}:5432'
+      - '${COMPOSE_PROJECT_PGSQL_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-54}32:5432'
     networks:
       - 'appnet'
     restart: on-failure:3
