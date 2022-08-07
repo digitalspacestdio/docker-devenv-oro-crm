@@ -17,7 +17,6 @@ services:
       - 'composer:/home/developer/.composer'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/msmtprc:/home/developer/.msmtprc:ro'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
-#    entrypoint: '/entrypoint.sh'
     working_dir: '/var/www'
     networks:
       - 'appnet'
@@ -61,10 +60,6 @@ services:
       - 'appcode:/var/www:consistent'
       - 'npm:/home/developer/.npm'
       - 'composer:/home/developer/.composer'
-#      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/cli/php.ini:/home/developer/.developer/etc/php/${COMPOSE_PROJECT_PHP_VERSION-8.0}/php.ini.dist:ro'
-#      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/msmtprc:/home/developer/.msmtprc:ro'
-#      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/cli/entrypoint.sh:/entrypoint.sh:ro'
-#    entrypoint: '/entrypoint.sh'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
