@@ -3,11 +3,12 @@ version: '3.4'
 services:
   database:
     image: 'postgres:${COMPOSE_PROJECT_POSTGRES_VERSION-9.6.24}'
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database
     environment:
       LANG: 'C.UTF-8'
-      POSTGRES_USER: '${ORO_DB_USER}'
-      POSTGRES_PASSWORD: '${ORO_DB_PASSWORD}'
-      POSTGRES_DB: '${ORO_DB_NAME}'
+      POSTGRES_USER: '${ORO_DB_USER:-application}'
+      POSTGRES_PASSWORD: '${ORO_DB_PASSWORD:-application}'
+      POSTGRES_DB: '${ORO_DB_NAME:-application}'
     volumes:
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/pgsql/initdb.d:/docker-entrypoint-initdb.d:ro'
       - 'postgresql-data:/var/lib/postgresql/data:delegated'
@@ -17,10 +18,10 @@ services:
       - 'appnet'
     restart: on-failure:3
     healthcheck:
-      test: "pg_isready -U ${ORO_DB_USER}"
+      test: "pg_isready -U ${ORO_DB_USER:-application}"
       start_period: 60s
       interval: 5s
-      retries: 5
+      retries: 15
 
 volumes:
   postgresql-data:

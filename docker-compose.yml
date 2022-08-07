@@ -2,33 +2,38 @@ version: '3.4'
 
 services:
   fpm:
-    image: "digitalspacestudio/php-node:${COMPOSE_PROJECT_PHP_VERSION-8.0}-${COMPOSE_PROJECT_NODE_VERSION-14}"
+    image: ${COMPOSE_PROJECT_NAME:-unnamed}_php-node:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_fpm_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    build:
+      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php"
+      args:
+        PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
+        NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    command: php-fpm
     user: root
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/linuxbrew/.npm'
-      - 'composer:/home/linuxbrew/.composer'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/php-fpm.conf:/home/linuxbrew/.linuxbrew/etc/php/${COMPOSE_PROJECT_PHP_VERSION-8.0}/php-fpm.conf:ro'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/php.ini:/home/linuxbrew/.linuxbrew/etc/php/${COMPOSE_PROJECT_PHP_VERSION-8.0}/php.ini.dist:ro'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/msmtprc:/home/linuxbrew/.msmtprc:ro'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/entrypoint.sh:/entrypoint.sh:ro'
-    entrypoint: '/entrypoint.sh'
+      - 'npm:/home/developer/.npm'
+      - 'composer:/home/developer/.composer'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/msmtprc:/home/developer/.msmtprc:ro'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
+#    entrypoint: '/entrypoint.sh'
     working_dir: '/var/www'
     networks:
       - 'appnet'
     environment:
-      - 'ORO_DB_HOST=${ORO_DB_HOST-database}'
-      - 'ORO_DB_PORT=${ORO_DB_PORT-3306}'
-      - 'ORO_DB_NAME=${ORO_DB_NAME-application}'
-      - 'ORO_DB_USER=${ORO_DB_USER-application}'
-      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD-application}'
+      - 'ORO_DB_HOST=${ORO_DB_HOST:-database}'
+      - 'ORO_DB_PORT=${ORO_DB_PORT:-3306}'
+      - 'ORO_DB_NAME=${ORO_DB_NAME:-application}'
+      - 'ORO_DB_USER=${ORO_DB_USER:-application}'
+      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD:-application}'
       - 'ORO_MAILER_DRIVER=${ORO_MAILER_DRIVER-smtp}'
       - 'ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}'
       - 'ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}'
       - 'ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}'
       - 'XHGUI_MONGO_HOSTNAME=mongodb'
       - 'XHGUI_MONGO_DATABASE=xhprof'
-      - 'COMPOSER_AUTH=$COMPOSE_PROJECT_COMPOSER_AUTH'
+      - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
     depends_on:
       database:
@@ -44,35 +49,40 @@ services:
       interval: 5s
 
   cli:
-    image: "digitalspacestudio/php-node:${COMPOSE_PROJECT_PHP_VERSION-8.0}-${COMPOSE_PROJECT_NODE_VERSION-14}"
+    image: ${COMPOSE_PROJECT_NAME:-unnamed}_php-node:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_cli_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    build:
+      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php"
+      args:
+        PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
+        NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     user: root
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/linuxbrew/.npm'
-      - 'composer:/home/linuxbrew/.composer'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/cli/php.ini:/home/linuxbrew/.linuxbrew/etc/php/${COMPOSE_PROJECT_PHP_VERSION-8.0}/php.ini.dist:ro'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/msmtprc:/home/linuxbrew/.msmtprc:ro'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/cli/entrypoint.sh:/entrypoint.sh:ro'
-    entrypoint: '/entrypoint.sh'
+      - 'npm:/home/developer/.npm'
+      - 'composer:/home/developer/.composer'
+#      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/cli/php.ini:/home/developer/.developer/etc/php/${COMPOSE_PROJECT_PHP_VERSION-8.0}/php.ini.dist:ro'
+#      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/fpm/msmtprc:/home/developer/.msmtprc:ro'
+#      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/cli/entrypoint.sh:/entrypoint.sh:ro'
+#    entrypoint: '/entrypoint.sh'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
       - 'appnet'
     environment:
-      - 'ORO_DB_HOST=${ORO_DB_HOST-database}'
-      - 'ORO_DB_PORT=${ORO_DB_PORT-3306}'
-      - 'ORO_DB_NAME=${ORO_DB_NAME-application}'
-      - 'ORO_DB_USER=${ORO_DB_USER-application}'
-      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD-application}'
+      - 'ORO_DB_HOST=${ORO_DB_HOST:-database}'
+      - 'ORO_DB_PORT=${ORO_DB_PORT:-3306}'
+      - 'ORO_DB_NAME=${ORO_DB_NAME:-application}'
+      - 'ORO_DB_USER=${ORO_DB_USER:-application}'
+      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD:-application}'
       - 'ORO_MAILER_DRIVER=${ORO_MAILER_DRIVER-smtp}'
       - 'ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}'
       - 'ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}'
       - 'ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}'
       - 'XHGUI_MONGO_HOSTNAME=mongodb'
       - 'XHGUI_MONGO_DATABASE=xhprof'
-      - 'COMPOSER_AUTH=$COMPOSE_PROJECT_COMPOSER_AUTH'
+      - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
-    networks:
-      - 'appnet'
     depends_on:
       database:
         condition: service_healthy
@@ -83,8 +93,9 @@ services:
 
   mail:
     image: "mailhog/mailhog"
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_mail
     ports:
-      - "${COMPOSE_PROJECT_PORT_MAIL_WEBGUI:-8025}:8025"
+      - "${COMPOSE_PROJECT_PORT_PREFIX:-301}25:8025"
     networks:
       - 'appnet'
     restart: on-failure:3
@@ -103,7 +114,7 @@ services:
       - XHGUI_MONGO_HOSTNAME=mongodb
       - XHGUI_MONGO_DATABASE=xhprof
     ports:
-      - "${COMPOSE_PROJECT_PORT_XHGUI:-81}:80"
+      - "${COMPOSE_PROJECT_PORT_PREFIX:-301}81:80"
     depends_on:
       mongodb:
         condition: service_healthy
@@ -117,6 +128,7 @@ services:
 
   mongodb:
     image: percona/percona-server-mongodb:4.4
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_mongodb
     profiles: ["profiler"]
     # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
     command: --storageEngine=wiredTiger
@@ -134,13 +146,14 @@ services:
 
   elasticsearch:
     image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:${COMPOSE_PROJECT_ELASTICSEARCH_VERSION-7.10.2}'
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_elasticsearch
     volumes:
       - "elasticsearch-data:/usr/share/elasticsearch/data:delegated"
     environment:
       ES_JAVA_OPTS: '${ES_JAVA_OPTS:--Xms256m -Xmx2048m}'
       discovery.type: 'single-node'
     ports:
-      - "${COMPOSE_PROJECT_PORT_ELASTICSEARCH:-9200}:9200"
+      - "${COMPOSE_PROJECT_PORT_PREFIX:-301}92:9200"
     networks:
       - 'appnet'
     restart: on-failure:3
@@ -151,13 +164,14 @@ services:
       retries: 5
 
   nginx:
-    image: 'nginx:1.21-oroplatform'
+    image: ${COMPOSE_PROJECT_NAME:-unnamed}_nginx
     build: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/nginx"
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_nginx
     depends_on:
       fpm:
         condition: service_healthy
     ports:
-      - '${COMPOSE_PROJECT_PORT_HTTP:-80}:80'
+      - '${COMPOSE_PROJECT_PORT_PREFIX:-301}80:80'
     volumes:
       - 'appcode:/var/www:ro'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro'

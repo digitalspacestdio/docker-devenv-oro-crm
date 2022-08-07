@@ -13,7 +13,6 @@ find-up () {
   echo "$path"
 }
 
-
 if [[ -z $COMPOSE_PROJECT_APPDIR ]]; then
   export COMPOSE_PROJECT_APPDIR=$(find-up composer.json "$PWD/www")
 fi
@@ -45,31 +44,16 @@ if [[ -f .env ]]; then
   set +o allexport
 fi
 
-export COMPOSE_PROJECT_MODE=${COMPOSE_PROJECT_MODE-default}
-export COMPOSE_PROJECT_PHP_VERSION=${COMPOSE_PROJECT_PHP_VERSION-8.0}
-export COMPOSE_PROJECT_NODE_VERSION=${COMPOSE_PROJECT_NODE_VERSION-14}
-export COMPOSE_PROJECT_MYSQL_IMAGE=${COMPOSE_PROJECT_MYSQL_IMAGE-"mariadb:10.7"}
-export COMPOSE_PROJECT_POSTGRES_VERSION=${COMPOSE_PROJECT_POSTGRES_VERSION-9.6.24}
-export COMPOSE_PROJECT_ELASTICSEARCH_VERSION=${COMPOSE_PROJECT_ELASTICSEARCH_VERSION-7.10.2}
 export COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME-$(basename $(pwd))}
 export COMPOSE_PROJECT_PORT_PREFIX=${COMPOSE_PROJECT_PORT_PREFIX-"301"}
-export COMPOSE_PROJECT_PORT_HTTP=${COMPOSE_PROJECT_PORT_HTTP-"${COMPOSE_PROJECT_PORT_PREFIX}80"}
-export COMPOSE_PROJECT_PORT_XHGUI=${COMPOSE_PROJECT_PORT_XHGUI-"${COMPOSE_PROJECT_PORT_PREFIX}81"}
-export COMPOSE_PROJECT_PORT_MYSQL=${COMPOSE_PROJECT_PORT_MYSQL-"${COMPOSE_PROJECT_PORT_PREFIX}06"}
-export COMPOSE_PROJECT_PORT_PGSQL=${COMPOSE_PROJECT_PORT_PGSQL-"${COMPOSE_PROJECT_PORT_PREFIX}32"}
-export COMPOSE_PROJECT_PORT_ELASTICSEARCH=${COMPOSE_PROJECT_PORT_ELASTICSEARCH-"${COMPOSE_PROJECT_PORT_PREFIX}92"}
-export COMPOSE_PROJECT_PORT_MAIL_WEBGUI=${COMPOSE_PROJECT_PORT_MAIL_WEBGUI-"${COMPOSE_PROJECT_PORT_PREFIX}25"}
+export COMPOSE_PROJECT_PORT_HTTP="${COMPOSE_PROJECT_PORT_PREFIX}80"
+export COMPOSE_PROJECT_PORT_XHGUI="${COMPOSE_PROJECT_PORT_PREFIX}81"
+export COMPOSE_PROJECT_PORT_MYSQL="${COMPOSE_PROJECT_PORT_PREFIX}06"
+export COMPOSE_PROJECT_PORT_PGSQL="${COMPOSE_PROJECT_PORT_PREFIX}32"
+export COMPOSE_PROJECT_PORT_ELASTICSEARCH="${COMPOSE_PROJECT_PORT_PREFIX}92"
+export COMPOSE_PROJECT_PORT_MAIL_WEBGUI="${COMPOSE_PROJECT_PORT_PREFIX}25"
 export COMPOSE_PROJECT_COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH-${COMPOSER_AUTH-""}}
 export COMPOSE_PROJECT_CONFIG_DIR="$HOME/.$(basename $0)/${COMPOSE_PROJECT_NAME}"
-
-export ORO_DB_HOST=${ORO_DB_HOST-database}
-export ORO_DB_NAME=${ORO_DB_NAME-application}
-export ORO_DB_USER=${ORO_DB_USER-application}
-export ORO_DB_PASSWORD=${ORO_DB_PASSWORD-application}
-export ORO_MAILER_DRIVER=${ORO_MAILER_DRIVER-smtp}
-export ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}
-export ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}
-export ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}
 
 if [[ ! -d "${COMPOSE_PROJECT_CONFIG_DIR}" ]];then
     mkdir -p "${COMPOSE_PROJECT_CONFIG_DIR}"
@@ -77,7 +61,7 @@ fi
 
 rsync -r "${DIR}/" "${COMPOSE_PROJECT_CONFIG_DIR}/"
 
-DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN-$(which docker-compose)}";
+DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN-$(which docker) compose}";
 if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml"
 fi
@@ -154,6 +138,57 @@ if [[ $1 == "up" ]]; then
   printf "\033[0;37m[${COMPOSE_PROJECT_NAME}] Elasticsearch URL: http://localhost:${COMPOSE_PROJECT_PORT_ELASTICSEARCH}/\033[0m\n"
   printf "\033[0;37m[${COMPOSE_PROJECT_NAME}] MySql Address: 127.0.0.1:${COMPOSE_PROJECT_PORT_MYSQL}\033[0m\n"
   printf "\033[0;37m[${COMPOSE_PROJECT_NAME}] PgSql Address: 127.0.0.1:${COMPOSE_PROJECT_PORT_PGSQL}\033[0m\n"
+fi
+
+if [[ $DOCKER_COMPOSE_VERSION -gt 1 ]]; then
+  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run -i -T --rm"
+else
+  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run --rm"
+fi
+
+if echo $1 | grep -i 'import' | grep -i 'db\|database\|mysql' > /dev/null; then
+  if [[ -z $2 ]]; then
+    echo "Data file was not provided"
+    exit 1
+  fi
+  if ! [[ -r $2 ]]; then
+    echo "Data file '$2' does not readable"
+    exit 1
+  fi
+  DB_DUMP=$(realpath $2)
+  DB_DUMP_BASENAME=$(echo "${DB_DUMP##*/}")
+  if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
+    DB_IMPORT_CMD="PGPASSWORD=\$DATABASE_PASSWORD psql --set ON_ERROR_STOP=on -h \$DATABASE_HOST -p \$DATABASE_PORT -U \$DATABASE_USER -d \$DATABASE_NAME -1"
+  elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
+    DB_IMPORT_CMD="sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/DEFINER=CURRENT_USER \*/' | MYSQL_PWD=\$DATABASE_PASSWORD mysql -h\$DATABASE_HOST -P\$DATABASE_PORT -u\$DATABASE_USER \$DATABASE_NAME"
+  fi
+
+  if echo ${DB_DUMP_BASENAME} | grep -i 'sql\.gz$' > /dev/null; then
+    DB_IMPORT_CMD="gunzip | ${DB_IMPORT_CMD}"
+  fi
+  DB_IMPORT_CMD="\$(which pv > /dev/null && echo 'pv -f' || echo cat) /${DB_DUMP_BASENAME} | ${DB_IMPORT_CMD}"
+
+  echo "Starting import of the database dump..."
+  exec ${DOCKER_COMPOSE_RUN_CMD} -v "${DB_DUMP}:/${DB_DUMP_BASENAME}" database-cli bash -c "$DB_IMPORT_CMD"
+fi
+
+if echo $1 | grep -i '^mysql' > /dev/null; then
+  for i in "$@"; do
+      i="${i//\\/\\\\}"
+      i="${i//$/\\$}"
+      C="$C \"${i//\"/\\\"}\""
+  done
+  MYSQL_CMD="MYSQL_PWD=\$DATABASE_PASSWORD mysql -h\$DATABASE_HOST -P\$DATABASE_PORT -u\$DATABASE_USER \$DATABASE_NAME"
+  exec ${DOCKER_COMPOSE_RUN_CMD} database-cli bash -c "$MYSQL_CMD"
+fi
+
+if echo $1 | grep -i '^composer\|bin/\|npm\|php\|node\|yarn\|bash\|symfony' > /dev/null; then
+  for i in "$@"; do
+      i="${i//\\/\\\\}"
+      i="${i//$/\\$}"
+      C="$C \"${i//\"/\\\"}\""
+  done
+  exec ${DOCKER_COMPOSE_RUN_CMD} cli bash -c "exec $C"
 fi
 
 exec ${DOCKER_COMPOSE_BIN} "$@"

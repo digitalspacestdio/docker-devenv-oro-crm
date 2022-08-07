@@ -3,6 +3,7 @@ version: '3.4'
 services:
   database:
     image: 'busybox'
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database
     command: sleep infinity
     networks:
       - 'appnet'

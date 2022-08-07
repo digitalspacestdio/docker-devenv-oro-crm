@@ -31,24 +31,24 @@ export COMPOSE_PROJECT_COMPOSER_AUTH='{
 ```
 If you want use specific php version just export environment variable:
 ```bash
-export COMPOSE_PROJECT_PHP_VERSION=7.4
+export COMPOSE_PROJECT_PHP_VERSION=8.1
 ```
-> following versions are supported: 7.2, 7.3, 7.4, 8.0
+> following versions are supported: 7.2, 7.3, 7.4, 8.0, 8.1, 8.2
 
 Clone the source code and change to the directory
 ```bash
-git clone --single-branch --branch 4.2.7 git@github.com:oroinc/orocommerce-application.git ~/orocommerce-application
+git clone --single-branch --branch 5.0.5 git@github.com:oroinc/orocommerce-application.git ~/orocommerce-application
 cd ~/orocommerce-application
 ```
 
 Install dependencies
 ```bash
-docker-compose-oroplatform run --rm cli composer install -o --no-interaction
+docker-compose-oroplatform composer install -o --no-interaction
 ```
 
 Install the application
 ```bash
-docker-compose-oroplatform run --rm cli bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.'  --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
+docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.'  --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
 ```
 
 Start the stack in the background mode
@@ -75,16 +75,10 @@ docker-compose-oroplatform down -v
 
 ## Supported Environment Variables
 * `COMPOSE_PROJECT_MODE` - (`mutagen`|`default`)
-* `COMPOSE_PROJECT_PHP_VERSION` - (`7.1`|`7.2`|`7.3`|`7.4`|`8.0`|`8.1`)
-* `COMPOSE_PROJECT_NODE_VERSION` - (`12`|`14`|`17`)
-* `COMPOSE_PROJECT_MYSQL_IMAGE` - `mariadb:10.7` by default
+* `COMPOSE_PROJECT_PHP_VERSION` - (`7.1`|`7.2`|`7.3`|`7.4`|`8.0`|`8.1`|`8.2`)
+* `COMPOSE_PROJECT_NODE_VERSION` - (`12.22.12`|`14.19.3`|`16.16.0`) see https://nodejs.org/dist/ for available versions
+* `COMPOSE_PROJECT_MYSQL_IMAGE` - `mysql:8.0-oracle` by default
 * `COMPOSE_PROJECT_POSTGRES_VERSION` - `9.6.24` by default
 * `COMPOSE_PROJECT_ELASTICSEARCH_VERSION` - `7.10.2` by default
 * `COMPOSE_PROJECT_NAME` - by default the project directory will be used
 * `COMPOSE_PROJECT_PORT_PREFIX` - `302` by default
-* `COMPOSE_PROJECT_PORT_HTTP` - `$COMPOSE_PROJECT_PORT_PREFIX` + `80` by default
-* `COMPOSE_PROJECT_PORT_XHGUI` - `$COMPOSE_PROJECT_PORT_PREFIX` + `81` by default
-* `COMPOSE_PROJECT_PORT_MYSQL` - `$COMPOSE_PROJECT_PORT_PREFIX` + `06` by default
-* `COMPOSE_PROJECT_PORT_PGSQL` - `$COMPOSE_PROJECT_PORT_PREFIX` + `32` by default
-* `COMPOSE_PROJECT_PORT_ELASTICSEARCH` - `$COMPOSE_PROJECT_PORT_PREFIX` + `92` by default
-* `COMPOSE_PROJECT_PORT_MAIL_WEBGUI` - `$COMPOSE_PROJECT_PORT_PREFIX` + `25` by default
