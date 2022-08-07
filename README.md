@@ -37,7 +37,7 @@ export COMPOSE_PROJECT_PHP_VERSION=8.1
 
 Clone the source code and change to the directory
 ```bash
-git clone --single-branch --branch 5.0.5 git@github.com:oroinc/orocommerce-application.git ~/orocommerce-application
+git clone --single-branch --branch 5.0.5 https://github.com/oroinc/orocommerce-application.git ~/orocommerce-application
 cd ~/orocommerce-application
 ```
 

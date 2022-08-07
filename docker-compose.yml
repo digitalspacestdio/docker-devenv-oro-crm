@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   fpm:
-    image: ${COMPOSE_PROJECT_NAME:-unnamed}_php-node:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_fpm_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php"
@@ -49,7 +49,7 @@ services:
       interval: 5s
 
   cli:
-    image: ${COMPOSE_PROJECT_NAME:-unnamed}_php-node:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_cli_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php"
