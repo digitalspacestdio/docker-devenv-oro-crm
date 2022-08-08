@@ -66,7 +66,7 @@ if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml"
 fi
 
-if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless" > /dev/null; then
+if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless" > /dev/null 2>&1; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-rootless.yml"
 fi
 
@@ -99,10 +99,6 @@ fi
 
 if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml"
-  # if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless"; then
-  #   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen-rootless.yml"
-  # fi
-
   MUTAGEN_SESSION_NAME=$(echo ${COMPOSE_PROJECT_NAME}-appcode | awk '{print tolower($0)}' | sed 's/[^0-9a-z]/-/g')
   WAIT_SYNC="1"
   if docker volume ls | grep "^${COMPOSE_PROJECT_NAME}_appcode$" > /dev/null 2>&1; then
@@ -122,7 +118,13 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
     fi
     DOCKER_CONTAINER_NAME_MUTAGEN=$(docker inspect -f '{{.Name}}' $(${DOCKER_COMPOSE_BIN} ps -q mutagen) | cut -c2-)
     if ! mutagen sync list | grep -i "Name: ${MUTAGEN_SESSION_NAME}" > /dev/null 2>&1; then
-      mutagen sync create --sync-mode=two-way-resolved --ignore=".idea" --ignore=".history" --ignore=".mysql.initdb.d" --ignore=".psql.initdb.d" --ignore-vcs --symlink-mode=ignore --name=${MUTAGEN_SESSION_NAME} "$COMPOSE_PROJECT_APPDIR" docker://linuxbrew@${DOCKER_CONTAINER_NAME_MUTAGEN}/var/www
+      if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless" > /dev/null; then
+        MUTAGEN_USER="root"
+      else
+        MUTAGEN_USER="php"
+      fi
+
+      mutagen sync create --sync-mode=two-way-resolved --ignore=".idea" --ignore=".history" --ignore=".mysql.initdb.d" --ignore=".psql.initdb.d" --ignore-vcs --symlink-mode=ignore --name=${MUTAGEN_SESSION_NAME} "$COMPOSE_PROJECT_APPDIR" docker://${MUTAGEN_USER}@${DOCKER_CONTAINER_NAME_MUTAGEN}/var/www
     else
       WAIT_SYNC=""
     fi
@@ -145,7 +147,7 @@ else
   DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run --rm"
 fi
 
-if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless"; then
+if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless" > /dev/null; then
   DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_RUN_CMD} --user root"
 fi
 
