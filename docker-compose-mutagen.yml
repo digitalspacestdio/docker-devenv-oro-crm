@@ -4,6 +4,7 @@ services:
   mutagen:
     image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_mutagen
+    user: root
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
