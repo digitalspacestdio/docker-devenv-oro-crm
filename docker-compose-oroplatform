@@ -126,7 +126,7 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
 
       mutagen sync create --sync-mode=two-way-resolved \
       --scan-mode=accelerated \
-      --watch-mode=force-polling \
+      --watch-mode=force-poll \
       --watch-polling-interval=1 \
       --ignore=".idea" \
       --ignore=".history" \
