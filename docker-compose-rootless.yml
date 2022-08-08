@@ -3,6 +3,7 @@ version: '3.4'
 services:
   fpm:
     user: root
+    command: php-fpm -R
   cli:
     user: root
   nginx:

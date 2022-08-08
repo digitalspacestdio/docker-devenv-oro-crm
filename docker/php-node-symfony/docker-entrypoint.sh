@@ -24,10 +24,10 @@ exec docker-php-entrypoint "$@"
 # chown php:php /proc/self/fd/1
 # chown php:php /proc/self/fd/2
 
-for i in "$@"; do
-    i="${i//\\/\\\\}"
-    i="${i//$/\\$}"
-    C="$C \"${i//\"/\\\"}\""
-done
+# for i in "$@"; do
+#     i="${i//\\/\\\\}"
+#     i="${i//$/\\$}"
+#     C="$C \"${i//\"/\\\"}\""
+# done
 
 # HOME=/home/php su -p php -- -c "exec docker-php-entrypoint $C"
