@@ -18,11 +18,11 @@ exec docker-php-entrypoint "$@"
 # 	setfacl -dR -m u:php:rwX -m u:"$(whoami)":rwX /var/www
 # fi
 
-# chown php:php /var/www 2> /dev/null || true
-# chown php:php /home/php/.composer 2> /dev/null || true
-# chown php:php /home/php/.npm 2> /dev/null || true
-# chown php:php /proc/self/fd/1
-# chown php:php /proc/self/fd/2
+chown php:php /var/www 2> /dev/null || true
+chown php:php /home/php/.composer 2> /dev/null || true
+chown php:php /home/php/.npm 2> /dev/null || true
+chown php:php /proc/self/fd/1
+chown php:php /proc/self/fd/2
 
 # for i in "$@"; do
 #     i="${i//\\/\\\\}"

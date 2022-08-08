@@ -12,8 +12,8 @@ services:
     command: php-fpm
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/php/.npm'
-      - 'composer:/home/php/.composer'
+      - 'home-php:/home/php'
+      - 'home-root:/root'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/msmtprc:/home/php/.msmtprc:ro'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
@@ -61,8 +61,8 @@ services:
         NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/php/.npm'
-      - 'composer:/home/php/.composer'
+      - 'home-php:/home/php'
+      - 'home-root:/root'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
@@ -101,8 +101,8 @@ services:
     command: php bin/console oro:message-queue:consume -vv
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/php/.npm'
-      - 'composer:/home/php/.composer'
+      - 'home-php:/home/php'
+      - 'home-root:/root'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
@@ -141,8 +141,8 @@ services:
     command: php bin/console gos:websocket:server
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/php/.npm'
-      - 'composer:/home/php/.composer'
+      - 'home-php:/home/php'
+      - 'home-root:/root'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
@@ -272,9 +272,9 @@ volumes:
       type: none
       o: bind
       device: "${COMPOSE_PROJECT_APPDIR:-$PWD}"
-  npm:
+  home-php:
     driver: local
-  composer:
+  home-root:
     driver: local
   elasticsearch-data:
     driver: local

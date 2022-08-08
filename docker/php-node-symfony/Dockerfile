@@ -234,5 +234,5 @@ RUN set -eux; \
 	apk del .build-deps
 
 USER php
-
+VOLUME ["/home/php", "/root"]
 CMD [ "bash" ]
