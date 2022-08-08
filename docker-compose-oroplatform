@@ -66,7 +66,7 @@ if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml"
 fi
 
-if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless"; then
+if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless" > /dev/null; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-rootless.yml"
 fi
 
@@ -99,9 +99,9 @@ fi
 
 if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml"
-  if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless"; then
-    DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen-rootless.yml"
-  fi
+  # if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless"; then
+  #   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen-rootless.yml"
+  # fi
 
   MUTAGEN_SESSION_NAME=$(echo ${COMPOSE_PROJECT_NAME}-appcode | awk '{print tolower($0)}' | sed 's/[^0-9a-z]/-/g')
   WAIT_SYNC="1"
