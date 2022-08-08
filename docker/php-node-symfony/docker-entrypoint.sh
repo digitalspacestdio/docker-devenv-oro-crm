@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+if [[ $SYMFONY_ENV = "dev" ]]; then
+    export REMOTE_ADDR="127.0.0.1"
+fi
+
 # OWNER_UID=$(stat -c '%u' /var/www)
 # OWNER_GID=$(stat -c '%g' /var/www)
 
