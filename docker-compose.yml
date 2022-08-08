@@ -33,12 +33,17 @@ services:
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
+      - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
     depends_on:
       database:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
       mail:
+        condition: service_healthy
+      websocket:
+        condition: service_healthy
+      consumer:
         condition: service_healthy
     restart: on-failure:3
     healthcheck:
@@ -76,6 +81,7 @@ services:
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
+      - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
     depends_on:
       database:
         condition: service_healthy
@@ -115,6 +121,7 @@ services:
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
+      - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
     depends_on:
       database:
         condition: service_healthy
@@ -154,6 +161,7 @@ services:
       - 'XHGUI_MONGO_DATABASE=xhprof'
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
+      - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
     depends_on:
       database:
         condition: service_healthy
