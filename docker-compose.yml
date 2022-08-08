@@ -42,9 +42,9 @@ services:
       mail:
         condition: service_healthy
       websocket:
-        condition: service_healthy
+        condition: service_started
       consumer:
-        condition: service_healthy
+        condition: service_started
     restart: on-failure:3
     healthcheck:
       test: /bin/bash -c "</dev/tcp/localhost/9000"
@@ -98,7 +98,7 @@ services:
       args:
         PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
         NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
-    command: php bin/console oro:message-queue:consume
+    command: php bin/console oro:message-queue:consume -vv
     volumes:
       - 'appcode:/var/www:consistent'
       - 'npm:/home/php/.npm'
