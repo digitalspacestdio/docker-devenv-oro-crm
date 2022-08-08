@@ -124,7 +124,18 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
         MUTAGEN_USER="php"
       fi
 
-      mutagen sync create --sync-mode=two-way-resolved --ignore=".idea" --ignore=".history" --ignore=".mysql.initdb.d" --ignore=".psql.initdb.d" --ignore-vcs --symlink-mode=ignore --name=${MUTAGEN_SESSION_NAME} "$COMPOSE_PROJECT_APPDIR" docker://${MUTAGEN_USER}@${DOCKER_CONTAINER_NAME_MUTAGEN}/var/www
+      mutagen sync create --sync-mode=two-way-resolved \
+      --scan-mode=accelerated \
+      --watch-mode=force-polling \
+      --watch-polling-interval=1 \
+      --ignore=".idea" \
+      --ignore=".history" \
+      --ignore=".mysql.initdb.d" \
+      --ignore=".psql.initdb.d" \
+      --ignore-vcs \
+      --symlink-mode=ignore \
+      --name=${MUTAGEN_SESSION_NAME} \
+      "$COMPOSE_PROJECT_APPDIR" docker://${MUTAGEN_USER}@${DOCKER_CONTAINER_NAME_MUTAGEN}/var/www
     else
       WAIT_SYNC=""
     fi
