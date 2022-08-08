@@ -6,5 +6,9 @@ services:
     command: php-fpm -R
   cli:
     user: root
+  consumer:
+    user: root
   nginx:
+    user: root
+  websocket:
     user: root

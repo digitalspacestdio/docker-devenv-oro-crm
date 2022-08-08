@@ -10,7 +10,6 @@ services:
         PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
         NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     command: php-fpm
-    user: root
     volumes:
       - 'appcode:/var/www:consistent'
       - 'npm:/home/php/.npm'
@@ -55,7 +54,84 @@ services:
       args:
         PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
         NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
-    user: root
+    volumes:
+      - 'appcode:/var/www:consistent'
+      - 'npm:/home/php/.npm'
+      - 'composer:/home/php/.composer'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
+    working_dir: '/var/www'
+    networks:
+      - 'appnet'
+    environment:
+      - 'ORO_DB_HOST=${ORO_DB_HOST:-database}'
+      - 'ORO_DB_PORT=${ORO_DB_PORT:-3306}'
+      - 'ORO_DB_NAME=${ORO_DB_NAME:-application}'
+      - 'ORO_DB_USER=${ORO_DB_USER:-application}'
+      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD:-application}'
+      - 'ORO_MAILER_DRIVER=${ORO_MAILER_DRIVER-smtp}'
+      - 'ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}'
+      - 'ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}'
+      - 'ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}'
+      - 'XHGUI_MONGO_HOSTNAME=mongodb'
+      - 'XHGUI_MONGO_DATABASE=xhprof'
+      - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
+      - 'NODE_OPTIONS="--max-old-space-size=1024"'
+    depends_on:
+      database:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      mail:
+        condition: service_healthy
+
+  consumer:
+    image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_consumer_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    build:
+      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
+      args:
+        PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
+        NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    command: php bin/console oro:message-queue:consume
+    volumes:
+      - 'appcode:/var/www:consistent'
+      - 'npm:/home/php/.npm'
+      - 'composer:/home/php/.composer'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
+    working_dir: '/var/www'
+    networks:
+      - 'appnet'
+    environment:
+      - 'ORO_DB_HOST=${ORO_DB_HOST:-database}'
+      - 'ORO_DB_PORT=${ORO_DB_PORT:-3306}'
+      - 'ORO_DB_NAME=${ORO_DB_NAME:-application}'
+      - 'ORO_DB_USER=${ORO_DB_USER:-application}'
+      - 'ORO_DB_PASSWORD=${ORO_DB_PASSWORD:-application}'
+      - 'ORO_MAILER_DRIVER=${ORO_MAILER_DRIVER-smtp}'
+      - 'ORO_MAILER_HOST=${ORO_MAILER_HOST-mail}'
+      - 'ORO_MAILER_PORT=${ORO_MAILER_PORT-1025}'
+      - 'ORO_SECRET=${ORO_SECRET-ThisTokenIsNotSoSecretChangeIt}'
+      - 'XHGUI_MONGO_HOSTNAME=mongodb'
+      - 'XHGUI_MONGO_DATABASE=xhprof'
+      - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
+      - 'NODE_OPTIONS="--max-old-space-size=1024"'
+    depends_on:
+      database:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      mail:
+        condition: service_healthy
+
+  websocket:
+    image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_consumer_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    build:
+      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
+      args:
+        PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
+        NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    command: php bin/console gos:websocket:server
     volumes:
       - 'appcode:/var/www:consistent'
       - 'npm:/home/php/.npm'
