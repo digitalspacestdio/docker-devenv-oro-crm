@@ -49,8 +49,8 @@ RUN set -eux; \
 	; \
 	\
   docker-php-ext-configure zip; \
-  docker-php-ext-configure imap --with-imap --with-imap-ssl \
-  docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
+  docker-php-ext-configure imap --with-imap --with-imap-ssl; \
+  docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg; \
 	docker-php-ext-install -j$(nproc) \
 		pdo \
 		pdo_pgsql \
