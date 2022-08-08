@@ -23,6 +23,10 @@ RUN apk add --no-cache \
     bash \
     curl \
     msmtp-openrc \
+    jpegoptim \
+    pngquant \
+    optipng \
+    gifsicle \
 	;
 
 RUN set -eux; \
@@ -38,11 +42,15 @@ RUN set -eux; \
     freetype-dev \
     libjpeg-turbo-dev \
 		libpng-dev \
+    libwebp-dev \
     gmp-dev \
     tidyhtml-dev \
+    imap-dev \
 	; \
 	\
-	docker-php-ext-configure zip; \
+  docker-php-ext-configure zip; \
+  docker-php-ext-configure imap --with-imap --with-imap-ssl \
+  docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
 	docker-php-ext-install -j$(nproc) \
 		pdo \
 		pdo_pgsql \
@@ -57,6 +65,7 @@ RUN set -eux; \
     sodium \
     tidy \
     pcntl \
+    imap \
 	; \
 	pecl install \
 		apcu \

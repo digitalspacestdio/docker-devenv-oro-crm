@@ -48,7 +48,7 @@ docker-compose-oroplatform composer install -o --no-interaction
 
 Install the application
 ```bash
-docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.'  --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
+docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.'  --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://john.cloudcoder.space:30180/' --sample-data=y
 ```
 
 Start the stack in the background mode
