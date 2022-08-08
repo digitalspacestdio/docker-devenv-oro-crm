@@ -5,7 +5,7 @@ services:
     image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_fpm_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     build:
-      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php"
+      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
         PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
         NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
@@ -15,8 +15,8 @@ services:
       - 'appcode:/var/www:consistent'
       - 'npm:/home/php/.npm'
       - 'composer:/home/php/.composer'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/msmtprc:/home/php/.msmtprc:ro'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/msmtprc:/home/php/.msmtprc:ro'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
       - 'appnet'
@@ -51,7 +51,7 @@ services:
     image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_cli_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     build:
-      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php"
+      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
         PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
         NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
@@ -60,7 +60,7 @@ services:
       - 'appcode:/var/www:consistent'
       - 'npm:/home/php/.npm'
       - 'composer:/home/php/.composer'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
       - 'appnet'

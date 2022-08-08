@@ -66,8 +66,15 @@ if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml"
 fi
 
-if docker system info --format '{{.SecurityOptions}}'  | grep "name=rootless"; then
-   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-rootless.yml"
+if [[ $DOCKER_COMPOSE_VERSION -gt 1 ]]; then
+  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run -i -T --rm"
+else
+  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run --rm"
+fi
+
+if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless"; then
+  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-rootless.yml"
+  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_RUN_CMD} --user root"
 fi
 
 if [[ -z $ORO_DB_DRIVER ]] && [[ -f "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" ]]; then
@@ -99,6 +106,10 @@ fi
 
 if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen.yml"
+  if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless"; then
+    DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mutagen-rootless.yml"
+  fi
+
   MUTAGEN_SESSION_NAME=$(echo ${COMPOSE_PROJECT_NAME}-appcode | awk '{print tolower($0)}' | sed 's/[^0-9a-z]/-/g')
   WAIT_SYNC="1"
   if docker volume ls | grep "^${COMPOSE_PROJECT_NAME}_appcode$" > /dev/null 2>&1; then
@@ -142,12 +153,6 @@ if [[ $1 == "up" ]]; then
   printf "\033[0;37m[${COMPOSE_PROJECT_NAME}] Elasticsearch URL: http://localhost:${COMPOSE_PROJECT_PORT_ELASTICSEARCH}/\033[0m\n"
   printf "\033[0;37m[${COMPOSE_PROJECT_NAME}] MySql Address: 127.0.0.1:${COMPOSE_PROJECT_PORT_MYSQL}\033[0m\n"
   printf "\033[0;37m[${COMPOSE_PROJECT_NAME}] PgSql Address: 127.0.0.1:${COMPOSE_PROJECT_PORT_PGSQL}\033[0m\n"
-fi
-
-if [[ $DOCKER_COMPOSE_VERSION -gt 1 ]]; then
-  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run -i -T --rm"
-else
-  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run --rm"
 fi
 
 if echo $1 | grep -i 'import' | grep -i 'db\|database\|mysql' > /dev/null; then
