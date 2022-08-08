@@ -181,7 +181,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY conf.d/app.ini $PHP_INI_DIR/conf.d/
 COPY conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 
-COPY php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 RUN mkdir -p /var/run/php
 
 COPY docker-healthcheck.sh /usr/local/bin/docker-healthcheck
