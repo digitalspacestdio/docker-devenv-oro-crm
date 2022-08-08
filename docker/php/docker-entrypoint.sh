@@ -7,15 +7,15 @@ if [ "${1#-}" != "$1" ]; then
 fi
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ "$1" = 'symfony' ]; then
-	setfacl -R -m u:developer:rwX -m u:"$(whoami)":rwX /var/www
-	setfacl -dR -m u:developer:rwX -m u:"$(whoami)":rwX /var/www
+	setfacl -R -m u:php:rwX -m u:"$(whoami)":rwX /var/www
+	setfacl -dR -m u:php:rwX -m u:"$(whoami)":rwX /var/www
 fi
 
-chown developer:developer /var/www 2> /dev/null || true
-chown developer:developer /home/developer/.composer 2> /dev/null || true
-chown developer:developer /home/developer/.npm 2> /dev/null || true
-chown developer:developer /proc/self/fd/1
-chown developer:developer /proc/self/fd/2
+chown php:php /var/www 2> /dev/null || true
+chown php:php /home/php/.composer 2> /dev/null || true
+chown php:php /home/php/.npm 2> /dev/null || true
+chown php:php /proc/self/fd/1
+chown php:php /proc/self/fd/2
 
 for i in "$@"; do
     i="${i//\\/\\\\}"
@@ -23,4 +23,4 @@ for i in "$@"; do
     C="$C \"${i//\"/\\\"}\""
 done
 
-HOME=/home/developer su -p developer -- -c "exec docker-php-entrypoint $C"
+HOME=/home/php su -p php -- -c "exec docker-php-entrypoint $C"

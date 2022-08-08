@@ -10,6 +10,9 @@ ENV STABILITY ${STABILITY}
 ARG NODE_VERSION=16.16.0
 ENV APP_ENV=prod
 
+ARG PHP_UID=1000
+ARG PHP_GID=1000
+
 # persistent / runtime deps
 RUN apk add --no-cache \
 		acl \
@@ -77,8 +80,8 @@ RUN set -eux; \
 	\
 	apk del .build-deps
 
-RUN addgroup -g 1000 developer \
-    && adduser -u 1000 -G developer -s /bin/sh -D developer \
+RUN addgroup -g $PHP_GID php \
+    && adduser -u $PHP_UID -G php -s /bin/sh -D php \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \

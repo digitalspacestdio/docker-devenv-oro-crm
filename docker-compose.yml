@@ -13,9 +13,9 @@ services:
     user: root
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/developer/.npm'
-      - 'composer:/home/developer/.composer'
-      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/msmtprc:/home/developer/.msmtprc:ro'
+      - 'npm:/home/php/.npm'
+      - 'composer:/home/php/.composer'
+      - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/msmtprc:/home/php/.msmtprc:ro'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
@@ -58,8 +58,8 @@ services:
     user: root
     volumes:
       - 'appcode:/var/www:consistent'
-      - 'npm:/home/developer/.npm'
-      - 'composer:/home/developer/.composer'
+      - 'npm:/home/php/.npm'
+      - 'composer:/home/php/.composer'
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint:ro'
     working_dir: '/var/www'
     networks:
