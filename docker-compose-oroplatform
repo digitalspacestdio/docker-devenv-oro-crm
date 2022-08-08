@@ -66,6 +66,10 @@ if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml"
 fi
 
+if docker system info --format '{{.SecurityOptions}}'  | grep "name=rootless"; then
+   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-rootless.yml"
+fi
+
 if [[ -z $ORO_DB_DRIVER ]] && [[ -f "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" ]]; then
   export ORO_DB_DRIVER=$(echo $(cat "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" | grep 'database_driver:' | awk -F: '{ print $2 }'))
 fi

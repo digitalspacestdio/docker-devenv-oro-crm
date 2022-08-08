@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  fpm:
+    user: root
+  cli:
+    user: root
+  nginx:
+    user: root

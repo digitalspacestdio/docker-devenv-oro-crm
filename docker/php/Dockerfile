@@ -224,4 +224,6 @@ RUN set -eux; \
 	docker-php-ext-enable xdebug; \
 	apk del .build-deps
 
+USER php
+
 CMD [ "bash" ]
