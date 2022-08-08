@@ -126,12 +126,14 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
 
       mutagen sync create --sync-mode=two-way-resolved \
       --scan-mode=accelerated \
-      --watch-mode=force-poll \
-      --watch-polling-interval=1 \
+      --watch-mode-alpha=portable \
+      --watch-mode-beta=force-poll \
+      --watch-polling-interval-beta=3 \
       --ignore=".idea" \
       --ignore=".history" \
       --ignore=".mysql.initdb.d" \
       --ignore=".psql.initdb.d" \
+      --ignore=".git" \
       --ignore-vcs \
       --symlink-mode=ignore \
       --name=${MUTAGEN_SESSION_NAME} \
