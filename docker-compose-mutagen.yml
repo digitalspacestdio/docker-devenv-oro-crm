@@ -4,9 +4,14 @@ services:
   mutagen:
     image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_mutagen
+    build:
+      context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
+      args:
+        PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
+        NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     volumes:
       - 'appcode:/var/www:consistent'
-    command: "bash -c 'sleep infinity'"
+    command: "bash -c 'chmod 0777 /var/www; sleep infinity'"
     working_dir: '/var/www'
     networks:
       - 'appnet'
