@@ -1,17 +1,27 @@
 # OroCommerce|OroCRM|OroPlatform Docker Environment
 
-## Installation
+**Supported Systems**
+* MacOs (Intel, Apple M1)
+* Linux (AMD64, ARM64)
+* Windows via WSL2 (AMD64)
+
+## Pre-requirements
+### Docker
+**MacOs**  
+Install Docker for Mac: https://docs.docker.com/desktop/mac/install/  
+
+**Linux (Ubuntu and others)**  
+Install Docker Engine: https://docs.docker.com/engine/install/ubuntu/  
+Install Docker Compose https://docs.docker.com/compose/install/compose-plugin/
+
+**Windows**  
+Follow this guide: https://docs.docker.com/desktop/windows/wsl/  
+
 ### Homebrew (MacOs/Linux/Windows)
 Install Homebrew by following guide https://docs.brew.sh/Installation
 
-### Formula
-Install via homebrew by following command
-```bash
-brew install digitalspacestdio/docker-compose-oroplatform/docker-compose-oroplatform
-```
-
-## Usage
-You will need to configure auth token for docker compose, would be better to store it in your rc file (`.bashrc` or `.zshrc`)
+### Configure Composer Credentials
+You need to export following variable or add it to the `.bashrc` or `.zshrc` file
 ```bash
 export COMPOSE_PROJECT_COMPOSER_AUTH='{
     "http-basic": {
@@ -29,7 +39,14 @@ export COMPOSE_PROJECT_COMPOSER_AUTH='{
 }'
 ```
 
-Clone the source code and change to the directory
+## Installation
+Install via homebrew by following command
+```bash
+brew install digitalspacestdio/docker-compose-oroplatform/docker-compose-oroplatform
+```
+
+## Usage
+Clone the application source code
 ```bash
 git clone --single-branch --branch 5.0.5 https://github.com/oroinc/orocommerce-application.git ~/orocommerce-application
 ```
@@ -38,21 +55,28 @@ Navigate to the directory
 ```bash
 cd ~/orocommerce-application
 ```
-Install dependencies
+
+Install composer dependencies
 ```bash
 docker-compose-oroplatform composer install -o --no-interaction
 ```
 
-Install the application
+Optionally you change the DB driver in the config file. 
+
+Install the application by following command
 ```bash
 docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.' --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
+```
+
+Optionally import database (supports `*.sql` and `*.sql.gz` files)
+```bash
+docker-compose-magento database-import /path/to/dump.sql.gz
 ```
 
 Warmup cache
 ```bash
 docker-compose-oroplatform bin/console oro:entity-extend:cache:warmup
 ```
-
 
 Start the stack in the background mode
 ```bash
