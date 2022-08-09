@@ -5,7 +5,7 @@
 Install Homebrew by following guide https://docs.brew.sh/Installation
 
 ### Formula
-Just install by the command
+Install via homebrew by following command
 ```bash
 brew install digitalspacestdio/docker-compose-oroplatform/docker-compose-oroplatform
 ```
@@ -28,19 +28,15 @@ export COMPOSE_PROJECT_COMPOSER_AUTH='{
     }
 }'
 
-```
-If you want use specific php version just export environment variable:
-```bash
-export COMPOSE_PROJECT_PHP_VERSION=8.1
-```
-> following versions are supported: 7.2, 7.3, 7.4, 8.0, 8.1, 8.2
-
 Clone the source code and change to the directory
 ```bash
 git clone --single-branch --branch 5.0.5 https://github.com/oroinc/orocommerce-application.git ~/orocommerce-application
-cd ~/orocommerce-application
 ```
 
+Navigate to the directory
+```bash
+cd ~/orocommerce-application
+```
 Install dependencies
 ```bash
 docker-compose-oroplatform composer install -o --no-interaction
@@ -48,7 +44,7 @@ docker-compose-oroplatform composer install -o --no-interaction
 
 Install the application
 ```bash
-docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.'  --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://john.cloudcoder.space:30180/' --sample-data=y
+docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.' --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
 ```
 
 Warmup cache
@@ -79,12 +75,12 @@ Destroy the whole data
 docker-compose-oroplatform down -v
 ```
 
-## Supported Environment Variables
+## Environment Variables
 * `COMPOSE_PROJECT_MODE` - (`mutagen`|`default`)
-* `COMPOSE_PROJECT_PHP_VERSION` - (`7.1`|`7.2`|`7.3`|`7.4`|`8.0`|`8.1`|`8.2`)
-* `COMPOSE_PROJECT_NODE_VERSION` - (`12.22.12`|`14.19.3`|`16.16.0`) see https://nodejs.org/dist/ for available versions
-* `COMPOSE_PROJECT_MYSQL_IMAGE` - `mysql:8.0-oracle` by default
-* `COMPOSE_PROJECT_POSTGRES_VERSION` - `9.6.24` by default
-* `COMPOSE_PROJECT_ELASTICSEARCH_VERSION` - `7.10.2` by default
-* `COMPOSE_PROJECT_NAME` - by default the project directory will be used
+* `COMPOSE_PROJECT_PHP_VERSION` - (`7.1`|`7.2`|`7.3`|`7.4`|`8.0`|`8.1`|`8.2`), the image will be built from a corresponding `fpm-alpine` image, see https://hub.docker.com/_/php/?tab=tags&page=1&name=fpm-alpine&ordering=name for more versions
+* `COMPOSE_PROJECT_NODE_VERSION` - (`12.22.12`|`14.19.3`|`16.16.0`) see https://nodejs.org/dist/ for more versions
+* `COMPOSE_PROJECT_MYSQL_IMAGE` - `mysql:8.0-oracle` see https://hub.docker.com/_/mysql/?tab=tags for more versions
+* `COMPOSE_PROJECT_POSTGRES_VERSION` - `9.6.24` see https://hub.docker.com/_/postgres/?tab=tags for more versions
+* `COMPOSE_PROJECT_ELASTICSEARCH_VERSION` - `7.10.2` see https://www.docker.elastic.co/r/elasticsearch/elasticsearch-oss for more versions
+* `COMPOSE_PROJECT_NAME` - by default the working directory name will be used
 * `COMPOSE_PROJECT_PORT_PREFIX` - `302` by default

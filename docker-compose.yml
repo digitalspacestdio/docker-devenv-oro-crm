@@ -107,6 +107,7 @@ services:
     working_dir: '/var/www'
     networks:
       - 'appnet'
+    restart: on-failure:3
     environment:
       - 'ORO_DB_HOST=${ORO_DB_HOST:-database}'
       - 'ORO_DB_PORT=${ORO_DB_PORT:-3306}'
@@ -147,6 +148,7 @@ services:
     working_dir: '/var/www'
     networks:
       - 'appnet'
+    restart: on-failure:3
     environment:
       - 'ORO_DB_HOST=${ORO_DB_HOST:-database}'
       - 'ORO_DB_PORT=${ORO_DB_PORT:-3306}'
