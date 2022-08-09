@@ -70,7 +70,7 @@ docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --l
 
 Optionally import database (supports `*.sql` and `*.sql.gz` files)
 ```bash
-docker-compose-magento database-import /path/to/dump.sql.gz
+docker-compose-oroplatform database-import /path/to/dump.sql.gz
 ```
 
 Warmup cache
