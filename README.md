@@ -27,6 +27,7 @@ export COMPOSE_PROJECT_COMPOSER_AUTH='{
         "example.org": "xxxxxxxxxxxx"
     }
 }'
+```
 
 Clone the source code and change to the directory
 ```bash
@@ -76,6 +77,7 @@ docker-compose-oroplatform down -v
 ```
 
 ## Environment Variables
+> Can be stored in the `.dockenv` or `.env` file in the project root
 * `COMPOSE_PROJECT_MODE` - (`mutagen`|`default`)
 * `COMPOSE_PROJECT_PHP_VERSION` - (`7.1`|`7.2`|`7.3`|`7.4`|`8.0`|`8.1`|`8.2`), the image will be built from a corresponding `fpm-alpine` image, see https://hub.docker.com/_/php/?tab=tags&page=1&name=fpm-alpine&ordering=name for more versions
 * `COMPOSE_PROJECT_NODE_VERSION` - (`12.22.12`|`14.19.3`|`16.16.0`) see https://nodejs.org/dist/ for more versions
