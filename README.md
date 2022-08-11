@@ -75,7 +75,7 @@ docker-compose-oroplatform database-import /path/to/dump.sql.gz
 
 Warmup cache
 ```bash
-docker-compose-oroplatform bin/console oro:entity-extend:cache:warmup
+docker-compose-oroplatform bin/console cache:warmup
 ```
 
 Start the stack in the background mode
