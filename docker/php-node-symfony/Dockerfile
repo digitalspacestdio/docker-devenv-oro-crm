@@ -128,6 +128,7 @@ RUN apk add --no-cache \
         aarch64) \
           ARCH='arm64' \
           CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep 'node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz' | awk '{print \$1}')" \
+          ;; \
         x86_64) \
           ARCH='x64' \
           CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep 'node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz' | awk '{print \$1}')" \
