@@ -2,12 +2,12 @@ require 'formula'
 
 class DockerComposeOroplatform < Formula
   url "https://github.com/digitalspacestdio/homebrew-docker-compose-oroplatform.git", :using => :git
-  version "0.3.6"
+  version "0.3.7"
   revision 1
 
   depends_on 'coreutils'
   depends_on 'rsync'
-  depends_on 'mutagen-io/mutagen/mutagen'
+  depends_on 'mutagen-io/mutagen/mutagen' if OS.mac?
 
   def install
     #bin.install "docker-compose-oroplatform"

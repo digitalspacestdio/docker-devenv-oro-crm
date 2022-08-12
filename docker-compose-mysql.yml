@@ -10,9 +10,9 @@ services:
     environment:
       LANG: 'C.UTF-8'
       MYSQL_ROOT_PASSWORD: 'root'
-      MYSQL_USER: '${ORO_DB_USER:-application}'
-      MYSQL_PASSWORD: '${ORO_DB_PASSWORD:-application}'
-      MYSQL_DATABASE: '${ORO_DB_NAME:-application}'
+      MYSQL_USER: '${COMPOSE_PROJECT_ORO_DB_USER:-application}'
+      MYSQL_PASSWORD: '${COMPOSE_PROJECT_DATABASE_PASSWORD:-application}'
+      MYSQL_DATABASE: '${COMPOSE_PROJECT_DATABASE_NAME:-application}'
       MYSQL_ROOT_HOST: '%'
     volumes:
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/mysql/initdb.d:/docker-entrypoint-initdb.d:ro'
@@ -28,6 +28,33 @@ services:
       start_period: 60s
       interval: 5s
       retries: 15
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+
+  database-cli:
+    image: '${COMPOSE_PROJECT_MYSQL_IMAGE:-mysql:8.0-oracle}'
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database_cli
+    command: /bin/true
+    labels:
+      - 'project.name=${COMPOSE_PROJECT_NAME}'
+    environment:
+      - 'LANG=C.UTF-8'
+      - 'DATABASE_HOST=${COMPOSE_PROJECT_DATABASE_HOST:-database}'
+      - 'DATABASE_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}'
+      - 'DATABASE_USER=${COMPOSE_PROJECT_DATABASE_USER:-application}'
+      - 'DATABASE_PASSWORD=${COMPOSE_PROJECT_DATABASE_PASSWORD:-application}'
+      - 'DATABASE_NAME=${COMPOSE_PROJECT_DATABASE_NAME:-application}'
+    networks:
+      - 'appnet'
+    depends_on:
+      database:
+        condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
 
 volumes:
   mysql-data:

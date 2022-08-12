@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   database:
-    image: 'postgres:${COMPOSE_PROJECT_POSTGRES_VERSION-9.6.24}'
+    image: 'postgres:${COMPOSE_PROJECT_PGSQL_VERSION-9.6.24}'
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database
     environment:
       LANG: 'C.UTF-8'
@@ -22,6 +22,33 @@ services:
       start_period: 60s
       interval: 5s
       retries: 15
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+
+  database-cli:
+    image: '${COMPOSE_PROJECT_MYSQL_IMAGE:-mysql:8.0-oracle}'
+    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database_cli
+    command: /bin/true
+    labels:
+      - 'project.name=${COMPOSE_PROJECT_NAME}'
+    environment:
+      - 'LANG=C.UTF-8'
+      - 'DATABASE_HOST=${COMPOSE_PROJECT_DATABASE_HOST:-database}'
+      - 'DATABASE_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}'
+      - 'DATABASE_USER=${COMPOSE_PROJECT_DATABASE_USER:-application}'
+      - 'DATABASE_PASSWORD=${COMPOSE_PROJECT_DATABASE_PASSWORD:-application}'
+      - 'DATABASE_NAME=${COMPOSE_PROJECT_DATABASE_NAME:-application}'
+    networks:
+      - 'appnet'
+    depends_on:
+      database:
+        condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
 
 volumes:
   postgresql-data:

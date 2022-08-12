@@ -106,7 +106,7 @@ docker-compose-oroplatform down -v
 * `COMPOSE_PROJECT_PHP_VERSION` - (`7.1`|`7.2`|`7.3`|`7.4`|`8.0`|`8.1`|`8.2`), the image will be built from a corresponding `fpm-alpine` image, see https://hub.docker.com/_/php/?tab=tags&page=1&name=fpm-alpine&ordering=name for more versions
 * `COMPOSE_PROJECT_NODE_VERSION` - (`12.22.12`|`14.19.3`|`16.16.0`) see https://nodejs.org/dist/ for more versions
 * `COMPOSE_PROJECT_MYSQL_IMAGE` - `mysql:8.0-oracle` see https://hub.docker.com/_/mysql/?tab=tags for more versions
-* `COMPOSE_PROJECT_POSTGRES_VERSION` - `9.6.24` see https://hub.docker.com/_/postgres/?tab=tags for more versions
+* `COMPOSE_PROJECT_PGSQL_VERSION` - `9.6.24` see https://hub.docker.com/_/postgres/?tab=tags for more versions
 * `COMPOSE_PROJECT_ELASTICSEARCH_VERSION` - `7.10.2` see https://www.docker.elastic.co/r/elasticsearch/elasticsearch-oss for more versions
 * `COMPOSE_PROJECT_NAME` - by default the working directory name will be used
 * `COMPOSE_PROJECT_PORT_PREFIX` - `302` by default

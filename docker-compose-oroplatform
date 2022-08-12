@@ -62,12 +62,16 @@ fi
 rsync -r "${DIR}/" "${COMPOSE_PROJECT_CONFIG_DIR}/"
 
 DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN-$(which docker) compose}";
+DOCKER_COMPOSE_VERSION=$($DOCKER_COMPOSE_BIN version | grep '[0-9]\+\.[0-9]\+\.[0-9]\+' -o | awk -F. '{ print $1 }')
 if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml" ]]; then
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml"
 fi
 
 if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless" > /dev/null 2>&1; then
-  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-rootless.yml"
+  # Use root user in the rootless mode
+  export COMPOSE_PROJECT_USER_NAME="root"
+else
+  export COMPOSE_PROJECT_USER_NAME="developer"
 fi
 
 if [[ -z $ORO_DB_DRIVER ]] && [[ -f "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" ]]; then
@@ -76,10 +80,10 @@ fi
 
 if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
   if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
-    export ORO_DB_PORT=${ORO_DB_PORT-5432}
+    export COMPOSE_PROJECT_DATABASE_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-5432}
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-pgsql.yml"
   elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
-    export ORO_DB_PORT=${ORO_DB_PORT-3306}
+    export COMPOSE_PROJECT_DATABASE_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mysql.yml"
   fi
   if ${DOCKER_COMPOSE_BIN} ps --services | grep database > /dev/null; then
@@ -118,12 +122,6 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
     fi
     DOCKER_CONTAINER_NAME_MUTAGEN=$(docker inspect -f '{{.Name}}' $(${DOCKER_COMPOSE_BIN} ps -q mutagen) | cut -c2-)
     if ! mutagen sync list | grep -i "Name: ${MUTAGEN_SESSION_NAME}" > /dev/null 2>&1; then
-      if docker system info --format '{{.SecurityOptions}}' | grep "name=rootless" > /dev/null; then
-        MUTAGEN_USER="root"
-      else
-        MUTAGEN_USER="php"
-      fi
-
       mutagen sync create --sync-mode=two-way-resolved \
       --scan-mode=accelerated \
       --watch-mode-alpha=portable \
@@ -137,7 +135,7 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
       --ignore-vcs \
       --symlink-mode=ignore \
       --name=${MUTAGEN_SESSION_NAME} \
-      "$COMPOSE_PROJECT_APPDIR" docker://${MUTAGEN_USER}@${DOCKER_CONTAINER_NAME_MUTAGEN}/var/www
+      "$COMPOSE_PROJECT_APPDIR" docker://${COMPOSE_PROJECT_USER_NAME}@${DOCKER_CONTAINER_NAME_MUTAGEN}/var/www
     else
       WAIT_SYNC=""
     fi
@@ -155,7 +153,7 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
 fi
 
 if [[ $DOCKER_COMPOSE_VERSION -gt 1 ]]; then
-  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run -i -T --rm"
+  DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run -i --rm"
 else
   DOCKER_COMPOSE_RUN_CMD="${DOCKER_COMPOSE_BIN} run --rm"
 fi

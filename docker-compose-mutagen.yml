@@ -4,7 +4,6 @@ services:
   mutagen:
     image: digitalspacestudio/php-node-symfony:${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_mutagen_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
-    user: root
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
@@ -17,6 +16,10 @@ services:
     networks:
       - 'appnet'
     restart: on-failure:3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
   cli:
     depends_on:
       mutagen:
