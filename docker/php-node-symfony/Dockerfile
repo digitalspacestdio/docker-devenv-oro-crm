@@ -141,7 +141,7 @@ RUN apk add --no-cache \
     echo "$CHECKSUM  node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" | sha256sum -c - \
       && tar -xJf "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-      && rm -f "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" \
+      && rm -f "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz"; \
   else \
     echo "Building from source" \
     # backup build
