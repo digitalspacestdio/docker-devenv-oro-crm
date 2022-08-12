@@ -117,25 +117,30 @@ RUN set -eux; \
   apk del .build-deps
 
 RUN addgroup -g $PHP_GID ${PHP_USER_GROUP} \
-    && adduser -u $PHP_UID -G ${PHP_USER_GROUP} -s /bin/sh -D ${PHP_USER_NAME} \
-    && apk add --no-cache \
+    && adduser -u $PHP_UID -G ${PHP_USER_GROUP} -s /bin/sh -D ${PHP_USER_NAME};
+
+RUN apk add --no-cache \
         libstdc++ \
-    && apk add --no-cache --virtual .build-deps \
-        curl \
+    && NODEJS_DOWNLOAD_BASEURL="https://unofficial-builds.nodejs.org/download/release/"; \
+    && NODEJS_DOWNLOAD_FILENAME_SUFFIX="-musl"; \
     && ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
+        aarch64) \
+          ARCH='arm64' \
+          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep 'node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz' | awk '{print \$1}')" \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="2b74f0baaaa931ffc46573874a7d7435b642d28f1f283104ac297499fba99f0a" \
+          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep 'node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz' | awk '{print \$1}')" \
           ;; \
         *) ;; \
       esac \
   && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-      && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    curl -fsSLO --compressed "${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz"; \
+    echo "$CHECKSUM node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" | sha256sum -c - \
+      && tar -xJf "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
+      && rm -f "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" \
   else \
     echo "Building from source" \
     # backup build
@@ -182,32 +187,9 @@ RUN addgroup -g $PHP_GID ${PHP_USER_GROUP} \
     && rm -Rf "node-v$NODE_VERSION" \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
   fi \
-  && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
-  && apk del .build-deps \
   # smoke tests
   && node --version \
   && npm --version
-
-ENV YARN_VERSION 1.22.19
-
-RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
-  && for key in \
-    6A010C5166006599AA17F08146C2130DFD2497F5 \
-  ; do \
-    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
-    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
-  done \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
-  && mkdir -p /opt \
-  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
-  && apk del .build-deps-yarn \
-  # smoke test
-  && yarn --version
 
 WORKDIR /var/www
 
