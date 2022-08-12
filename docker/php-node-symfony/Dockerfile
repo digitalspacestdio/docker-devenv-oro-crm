@@ -121,7 +121,7 @@ RUN addgroup -g $PHP_GID ${PHP_USER_GROUP} \
 
 RUN apk add --no-cache \
         libstdc++ \
-    && NODEJS_DOWNLOAD_BASEURL="https://unofficial-builds.nodejs.org/download/release/" \
+    && NODEJS_DOWNLOAD_BASEURL="https://unofficial-builds.nodejs.org/download/release" \
     && NODEJS_DOWNLOAD_FILENAME_SUFFIX="-musl" \
     && ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
