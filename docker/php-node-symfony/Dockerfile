@@ -127,18 +127,19 @@ RUN apk add --no-cache \
       && case "${alpineArch##*-}" in \
         aarch64) \
           ARCH='arm64' \
-          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz | awk '{print $1}')" \
+          CHECKSUM=$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz | awk '{print $1}' | tr -d '\n') \
           ;; \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz | awk '{print $1}')" \
+          CHECKSUM=$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz | awk '{print $1}' | tr -d '\n') \
           ;; \
         *) ;; \
       esac \
   && if [ -n "${CHECKSUM}" ]; then \
     set -eux; \
     curl -fsSLO --compressed "${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz"; \
-    echo "$CHECKSUM node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" | sha256sum -c - || { echo "checksums did NOT match: "${CHECKSUM}" != " $(sha256sum "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz"); exit 1; } \
+    echo "$CHECKSUM node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" | sha256sum -c - \
+        || { echo ${CHECKSUM} != $(sha256sum "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz"); exit 1; } \
       && tar -xJf "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
       && rm -f "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" \
