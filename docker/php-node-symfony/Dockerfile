@@ -181,7 +181,7 @@ RUN apk add --no-cache \
     && tar -xf "node-v$NODE_VERSION.tar.xz" \
     && cd "node-v$NODE_VERSION" \
     && ./configure \
-    && make -j$(getconf _printf "2\n$(nproc)" | sort -g | head -n1ESSORS_ONLN) V= \
+    && make -j$(getconf _printf "2\n$(nproc)" | sort -g | head -n1) V= \
     && make install \
     && apk del .build-deps-full \
     && cd .. \
