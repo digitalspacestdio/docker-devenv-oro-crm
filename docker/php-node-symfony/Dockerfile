@@ -135,7 +135,7 @@ RUN apk add --no-cache \
           ;; \
         *) ;; \
       esac \
-  && if [ -z "${CHECKSUM}" ]; then \
+  && if [ -n "${CHECKSUM}" ]; then \
     set -eux; \
     curl -fsSLO --compressed "${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz"; \
     echo "$CHECKSUM node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" | sha256sum -c - \
