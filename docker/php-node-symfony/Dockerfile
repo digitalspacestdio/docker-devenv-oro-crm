@@ -127,16 +127,16 @@ RUN apk add --no-cache \
       && case "${alpineArch##*-}" in \
         aarch64) \
           ARCH='arm64' \
-          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep 'node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz' | awk '{print $1}')" \
+          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz | awk '{print $1}')" \
           ;; \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep 'node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz' | awk '{print $1}')" \
+          CHECKSUM="$(curl -sL ${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/SHASUMS256.txt | grep node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz | awk '{print $1}')" \
           ;; \
         *) ;; \
       esac \
-  && if [ -n "${CHECKSUM}" ]; then \
-    set -eu; \
+  && if [ -z "${CHECKSUM}" ]; then \
+    set -eux; \
     curl -fsSLO --compressed "${NODEJS_DOWNLOAD_BASEURL}/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz"; \
     echo "$CHECKSUM node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" | sha256sum -c - \
       && tar -xJf "node-v${NODE_VERSION}-linux-${ARCH}${NODEJS_DOWNLOAD_FILENAME_SUFFIX}.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
