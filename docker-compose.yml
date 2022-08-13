@@ -50,7 +50,7 @@ services:
         condition: service_started
       consumer:
         condition: service_started
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: /bin/bash -c "</dev/tcp/localhost/9000"
       start_period: 60s
@@ -129,7 +129,7 @@ services:
     working_dir: '/var/www'
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     environment:
       - 'ORO_DB_HOST=${COMPOSE_PROJECT_DATABASE_HOST:-database}'
       - 'ORO_DB_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}'
@@ -179,7 +179,7 @@ services:
     working_dir: '/var/www'
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     environment:
       - 'ORO_DB_HOST=${COMPOSE_PROJECT_DATABASE_HOST:-database}'
       - 'ORO_DB_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}'
@@ -209,17 +209,17 @@ services:
         max-size: "10m"
 
   mail:
-    image: "mailhog/mailhog"
+    image: "cd2team/mailhog"
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_mail
     ports:
       - "${COMPOSE_PROJECT_MAIL_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-80}25:8025"
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: "nc -vz -w 1 localhost 8025"
       start_period: 5s
-      interval: 5s
+      interval: 2s
 
   xhgui:
     image: "xhgui/xhgui:0.18.1"
@@ -237,7 +237,7 @@ services:
         condition: service_healthy
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: nc -vz -w 1 localhost 80
       start_period: 30s
@@ -259,7 +259,7 @@ services:
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/mongo/initdb.d:/docker-entrypoint-initdb.d'
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: mongo --quiet --eval 'db.runCommand("ping").ok' xhgui
       start_period: 30s
@@ -281,7 +281,7 @@ services:
       - "${COMPOSE_PROJECT_ES_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-92}92:9200"
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: /bin/bash -c "</dev/tcp/localhost/9200"
       start_period: 60s
@@ -306,7 +306,7 @@ services:
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro'
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: /bin/bash -c "</dev/tcp/localhost/80"
       start_period: 30s
