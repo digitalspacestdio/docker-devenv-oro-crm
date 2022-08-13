@@ -16,6 +16,9 @@ services:
       - 'appcode:/var/www:consistent'
     command: "bash -c 'chmod 0777 /var/www; sleep infinity'"
     working_dir: '/var/www'
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
     networks:
       - 'appnet'
     restart: on-failure:3
