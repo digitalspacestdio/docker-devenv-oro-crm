@@ -116,7 +116,7 @@ if [[ -f "$COMPOSE_PROJECT_APPDIR/.nvmrc" ]] && [[ -z $COMPOSE_PROJECT_NODE_VERS
   export COMPOSE_PROJECT_NODE_VERSION=$(cat $COMPOSE_PROJECT_APPDIR/.nvmrc | head -n1)
   echo "==> Found .nvmrc with following version: $COMPOSE_PROJECT_NODE_VERSION"
 fi
-ƒ√å
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export COMPOSE_PROJECT_MODE="mutagen"
 fi
