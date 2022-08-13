@@ -116,7 +116,7 @@ if [[ -f "$COMPOSE_PROJECT_APPDIR/.nvmrc" ]] && [[ -z $COMPOSE_PROJECT_NODE_VERS
   export COMPOSE_PROJECT_NODE_VERSION=$(cat $COMPOSE_PROJECT_APPDIR/.nvmrc | head -n1)
   echo "==> Found .nvmrc with following version: $COMPOSE_PROJECT_NODE_VERSION"
 fi
-
+ƒ√å
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export COMPOSE_PROJECT_MODE="mutagen"
 fi
@@ -145,8 +145,8 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
       mutagen sync create --sync-mode=two-way-resolved \
       --scan-mode=accelerated \
       --watch-mode-alpha=portable \
-      --watch-mode-beta=portable \
-      --watch-polling-interval-beta=10 \
+      --watch-mode-beta=force-poll \
+      --watch-polling-interval-beta=6 \
       --ignore=".idea" \
       --ignore=".history" \
       --ignore=".mysql.initdb.d" \
