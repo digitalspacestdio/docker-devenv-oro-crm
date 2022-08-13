@@ -2,16 +2,16 @@ version: '3.4'
 
 services:
   fpm:
-    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_fpm_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
+    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_fpm_${COMPOSE_PROJECT_PHP_VERSION:-8.1}_${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}"
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
-        PHP_VERSION: ${COMPOSE_PROJECT_PHP_VERSION:-8.1}
-        NODE_VERSION: ${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}
-        PHP_USER_NAME: ${COMPOSE_PROJECT_PHP_USER_NAME:-developer}
-        PHP_USER_GROUP: ${COMPOSE_PROJECT_PHP_USER_GROUP:-developer}
-        PHP_UID: ${COMPOSE_PROJECT_PHP_UID:-1000}
-        PHP_GID: ${COMPOSE_PROJECT_PHP_GID:-1000}
+        PHP_VERSION: "${COMPOSE_PROJECT_PHP_VERSION:-8.1}"
+        NODE_VERSION: "${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}"
+        PHP_USER_NAME: "${COMPOSE_PROJECT_PHP_USER_NAME:-developer}"
+        PHP_USER_GROUP: "${COMPOSE_PROJECT_PHP_USER_GROUP:-developer}"
+        PHP_UID: "${COMPOSE_PROJECT_PHP_UID:-1000}"
+        PHP_GID: "${COMPOSE_PROJECT_PHP_GID:-1000}"
     user: "${COMPOSE_PROJECT_USER_NAME:-developer}"
     command: php-fpm -R
     volumes:
