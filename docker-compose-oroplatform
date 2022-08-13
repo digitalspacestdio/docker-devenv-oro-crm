@@ -97,6 +97,26 @@ else
   DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-dummy.yml"
 fi
 
+if [[ -f "$COMPOSE_PROJECT_APPDIR/.docker-compose.user.yml" ]]; then
+  echo "==> Additional docker compose config will be used: $COMPOSE_PROJECT_APPDIR/.docker-compose.user.yml"
+  DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f $COMPOSE_PROJECT_APPDIR/.docker-compose.user.yml"
+fi
+
+if [[ -f "$COMPOSE_PROJECT_APPDIR/.php-version" ]] && [[ -z $PHP_VERSION ]]; then
+  export PHP_VERSION=$(cat $COMPOSE_PROJECT_APPDIR/.php-version | head -n1)
+  echo "==> Found .php-version with following version: $PHP_VERSION"
+fi
+
+if [[ -f "$COMPOSE_PROJECT_APPDIR/.phprc" ]] && [[ -z $PHP_VERSION ]]; then
+  export PHP_VERSION=$(cat $COMPOSE_PROJECT_APPDIR/.phprc | head -n1)
+  echo "==> Found .phprc with following version: $PHP_VERSION"
+fi
+
+if [[ -f "$COMPOSE_PROJECT_APPDIR/.nvmrc" ]] && [[ -z $NODE_VERSION ]]; then
+  export NODE_VERSION=$(cat $COMPOSE_PROJECT_APPDIR/.nvmrc | head -n1)
+  echo "==> Found .nvmrc with following version: $NODE_VERSION"
+fi
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export COMPOSE_PROJECT_MODE="mutagen"
 fi
