@@ -166,6 +166,8 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' 
 
 COPY msmtprc /.msmtprc
 
+ENV XDEBUG_MODE=off
+
 WORKDIR /var/www
 USER ${PHP_USER_NAME}
 VOLUME "/home/php" "/root" '/var/www'

@@ -38,6 +38,7 @@ services:
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
       - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
+      - 'XDEBUG_MODE=${XDEBUG_MODE_FPM:-off}'
     depends_on:
       database:
         condition: service_healthy
@@ -94,6 +95,7 @@ services:
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
       - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
+      - 'XDEBUG_MODE=${XDEBUG_MODE_CLI:-off}'
     depends_on:
       database:
         condition: service_healthy
@@ -143,6 +145,7 @@ services:
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
       - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
+      - 'XDEBUG_MODE=${XDEBUG_MODE_CONSUMER:-off}'
     depends_on:
       database:
         condition: service_healthy
@@ -192,6 +195,7 @@ services:
       - 'COMPOSER_AUTH=${COMPOSE_PROJECT_COMPOSER_AUTH:-{}}'
       - 'NODE_OPTIONS="--max-old-space-size=1024"'
       - 'SYMFONY_ENV=${SYMFONY_ENV:-dev}'
+      - 'XDEBUG_MODE=${XDEBUG_MODE_WEBSOCKET:-off}'
     depends_on:
       database:
         condition: service_healthy
