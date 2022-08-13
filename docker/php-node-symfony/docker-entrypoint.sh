@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 # OWNER_UID=$(stat -c '%u' /var/www)

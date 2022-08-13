@@ -152,15 +152,18 @@ RUN rm -f $PHP_INI_DIR/conf.d/app.prod.ini; \
 
 COPY app.dev.ini $PHP_INI_DIR/conf.d/
 
+# Install ofelia
+COPY --from=mcuadros/ofelia:latest /usr/bin/ofelia /usr/bin/ofelia
+
 # Install composer
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN echo 'alias composer='XDEBUG_MODE=off \composer'' >> ~/.bashrc
+RUN echo 'alias composer='XDEBUG_MODE=off \composer'' >> /home/${PHP_USER_NAME}/.bashrc
 
-# Install ofelia
-COPY --from=mcuadros/ofelia:latest /usr/bin/ofelia /usr/bin/ofelia
-
+# Install Symfony cli
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash \
       && apk add symfony-cli
 
