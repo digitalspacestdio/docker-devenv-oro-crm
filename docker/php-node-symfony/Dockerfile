@@ -44,13 +44,6 @@ RUN apk add --no-cache \
     libstdc++ \
   ;
 
-# Copy nodejs binaries
-COPY --from=app_node /usr/local /usr/local
-COPY --from=app_node /opt /opt
-
- # smoke test
-RUN node --version && npm --version && yarn --version
-
 RUN set -eux; \
   apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
@@ -155,6 +148,13 @@ RUN rm -f $PHP_INI_DIR/conf.d/app.prod.ini; \
   mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 COPY app.dev.ini $PHP_INI_DIR/conf.d/
+
+# Copy nodejs binaries
+COPY --from=app_node /usr/local /usr/local
+COPY --from=app_node /opt /opt
+
+ # smoke test
+RUN node --version && npm --version && yarn --version
 
 # Install ofelia
 COPY --from=mcuadros/ofelia:latest /usr/bin/ofelia /usr/bin/ofelia
