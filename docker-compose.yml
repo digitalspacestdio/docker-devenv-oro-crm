@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   fpm:
-    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_fpm"
+    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_fpm_${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}"
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
@@ -61,7 +61,7 @@ services:
         max-size: "10m"
 
   cli:
-    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_cli"
+    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_cli_${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}"
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
@@ -109,7 +109,7 @@ services:
         max-size: "10m"
 
   consumer:
-    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_consumer"
+    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_consumer_${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}"
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
@@ -159,7 +159,7 @@ services:
         max-size: "10m"
 
   websocket:
-    container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_websocket
+    container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_websocket_${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16.16.0}"
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
