@@ -152,6 +152,8 @@ if [[ $COMPOSE_PROJECT_MODE == "mutagen" ]] && [[ -f "${COMPOSE_PROJECT_CONFIG_D
       --ignore=".mysql.initdb.d" \
       --ignore=".psql.initdb.d" \
       --ignore=".git" \
+      --ignore="var/log" \
+      --ignore="var/logs" \
       --ignore-vcs \
       --symlink-mode=ignore \
       --name=${MUTAGEN_SESSION_NAME} \
