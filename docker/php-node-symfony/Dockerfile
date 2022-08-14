@@ -1,9 +1,13 @@
 ARG ALPINE_VERSION=3.16
 ARG NODE_VERSION=16.16.0
 ARG PHP_VERSION=8.1
+ARG COMPOSER_VERSION=2
 
 # Nodejs image
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS app_node
+
+# Php image
+FROM composer:${COMPOSER_VERSION} AS composer_app
 
 # Php image
 FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION} AS app_php
@@ -161,7 +165,7 @@ ENV XDEBUG_MODE=off
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer_app /usr/bin/composer /usr/bin/composer
 
 # Install Symfony cli
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash \
