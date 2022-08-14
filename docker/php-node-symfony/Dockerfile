@@ -78,11 +78,11 @@ RUN set -eux; \
   docker-php-ext-install -j$(printf "2\n$(nproc)" | sort -g | head -n1) apcu; \
   \
   mkdir -p /usr/src/php/ext/igbinary; \
-  curl -fsSL curl -fsSL https://github.com/igbinary/igbinary/archive/$EXT_IGBINARY_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/igbinary --strip 1; \
+  -fsSL https://github.com/igbinary/igbinary/archive/$EXT_IGBINARY_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/igbinary --strip 1; \
   docker-php-ext-install -j$(printf "2\n$(nproc)" | sort -g | head -n1) igbinary; \
   \
   mkdir -p /usr/src/php/ext/redis; \
-  curl -fsSL curl -fsSL https://github.com/phpredis/phpredis/archive/$EXT_REDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1; \
+  curl -fsSL https://github.com/phpredis/phpredis/archive/$EXT_REDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1; \
   docker-php-ext-configure redis --enable-redis-igbinary; \
   docker-php-ext-install -j$(printf "2\n$(nproc)" | sort -g | head -n1) redis; \
   \
@@ -92,7 +92,7 @@ RUN set -eux; \
   docker-php-ext-install -j$(printf "2\n$(nproc)" | sort -g | head -n1) mongodb; \
   \
   mkdir -p /usr/src/php/ext/xdebug; \
-  curl -fsSL curl -fsSL https://github.com/xdebug/xdebug/archive/refs/tags/$EXT_XDEBUG_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/xdebug --strip 1; \
+  curl -fsSL https://github.com/xdebug/xdebug/archive/refs/tags/$EXT_XDEBUG_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/xdebug --strip 1; \
   docker-php-ext-configure xdebug; \
   docker-php-ext-install -j$(printf "2\n$(nproc)" | sort -g | head -n1) xdebug; \
   \
