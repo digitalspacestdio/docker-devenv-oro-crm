@@ -101,7 +101,7 @@ docker-compose-oroplatform down -v
 ```
 
 ## Environment Variables
-> Can be stored in the `.dockenv` or `.env` file in the project root
+> Can be stored in the `.dockenv`, `.dockerenv` or `.env` file in the project root
 * `COMPOSE_PROJECT_MODE` - (`mutagen`|`default`)
 * `COMPOSE_PROJECT_COMPOSER_VERSION` - (`1|2` )
 * `COMPOSE_PROJECT_PHP_VERSION` - (`7.4`|`8.0`|`8.1`|`8.2`), the image will be built from a corresponding `fpm-alpine` image, see https://hub.docker.com/_/php/?tab=tags&page=1&name=fpm-alpine&ordering=name for more versions

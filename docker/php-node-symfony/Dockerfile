@@ -6,7 +6,7 @@ ARG COMPOSER_VERSION=2
 # Nodejs image
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS app_node
 
-# Php image
+# Composer image
 FROM composer:${COMPOSER_VERSION} AS composer_app
 
 # Php image
