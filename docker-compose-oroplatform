@@ -229,7 +229,7 @@ if echo $1 | grep -i 'import' | grep -i 'db\|database' > /dev/null; then
   exec ${DOCKER_COMPOSE_RUN_CMD} -v "${DB_DUMP}:/${DB_DUMP_BASENAME}" database-cli bash -c "$DB_IMPORT_CMD"
 fi
 
-if echo $1 | grep -i 'export' | grep -i 'db\|database' > /dev/null; then
+if echo $1 | grep -i 'export\|dump' | grep -i 'db\|database' > /dev/null; then
   DB_DUMP=$COMPOSE_PROJECT_APPDIR/database-$(date +'%Y%m%d%H%M%S').sql.gz
   DB_DUMP_BASENAME=$(echo "${DB_DUMP##*/}")
   touch "${DB_DUMP}"
