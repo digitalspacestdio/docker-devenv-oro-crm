@@ -100,6 +100,11 @@ Destroy the whole data
 docker-compose-oroplatform down -v
 ```
 
+You can generate the compose config file to use directly in the docker-compose by following command:
+```bash
+docker-compose-oroplatform config > docker-compose.yml
+```
+
 ## Environment Variables
 > Can be stored in the `.dockenv`, `.dockerenv` or `.env` file in the project root
 * `COMPOSE_PROJECT_MODE` - (`mutagen`|`default`)
