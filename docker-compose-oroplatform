@@ -202,11 +202,16 @@ if echo $1 | grep -i 'import' | grep -i 'db\|database' > /dev/null; then
     echo "Data file was not provided"
     exit 1
   fi
-  if ! [[ -r $2 ]]; then
+  if [[ -r $2 ]]; then
+    DB_DUMP=$(realpath $2)
+  elif [[ -r "$COMPOSE_PROJECT_APPDIR/$2" ]]; then
+    DB_DUMP=$(realpath "$COMPOSE_PROJECT_APPDIR/$2")
+  fi
+
+  if [[ -z $DB_DUMP ]] || [[ ! -r $DB_DUMP ]]; then
     echo "Data file '$2' does not readable"
     exit 1
   fi
-  DB_DUMP=$(realpath $2)
   DB_DUMP_BASENAME=$(echo "${DB_DUMP##*/}")
   if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
     DB_IMPORT_CMD="PGPASSWORD=\$DATABASE_PASSWORD psql --set ON_ERROR_STOP=on -h \$DATABASE_HOST -p \$DATABASE_PORT -U \$DATABASE_USER -d \$DATABASE_NAME -1"
