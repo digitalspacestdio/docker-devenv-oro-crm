@@ -215,7 +215,7 @@ if echo $1 | grep -i 'import' | grep -i 'db\|database' > /dev/null; then
 
   DB_DUMP_BASENAME=$(echo "${DB_DUMP##*/}")
   if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
-    DB_IMPORT_CMD="PGPASSWORD=\$DATABASE_PASSWORD psql --set ON_ERROR_STOP=on -h \$DATABASE_HOST -p \$DATABASE_PORT -U \$DATABASE_USER -d \$DATABASE_NAME -1"
+    DB_IMPORT_CMD="PGPASSWORD=\$DATABASE_PASSWORD psql --set ON_ERROR_STOP=on -h \$DATABASE_HOST -p \$DATABASE_PORT -U \$DATABASE_USER -d \$DATABASE_NAME -1 >/dev/null"
   elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
     DB_IMPORT_CMD="sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/DEFINER=CURRENT_USER \*/' | MYSQL_PWD=\$DATABASE_PASSWORD mysql -h\$DATABASE_HOST -P\$DATABASE_PORT -u\$DATABASE_USER \$DATABASE_NAME"
   fi
