@@ -4,6 +4,7 @@ services:
   database:
     image: 'postgres:${COMPOSE_PROJECT_PGSQL_VERSION-9.6.24}'
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database
+    command: postgres -c max_locks_per_transaction=10000 -c shared_buffers=512GB
     environment:
       LANG: 'C.UTF-8'
       POSTGRES_USER: '${ORO_DB_USER:-application}'
