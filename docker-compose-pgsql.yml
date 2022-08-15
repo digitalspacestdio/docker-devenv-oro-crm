@@ -28,18 +28,16 @@ services:
         max-size: "10m"
 
   database-cli:
-    image: '${COMPOSE_PROJECT_MYSQL_IMAGE:-mysql:8.0-oracle}'
+    image: 'postgres:${COMPOSE_PROJECT_PGSQL_VERSION-9.6.24}'
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database_cli
     command: /bin/true
     labels:
       - 'project.name=${COMPOSE_PROJECT_NAME}'
     environment:
-      - 'LANG=C.UTF-8'
-      - 'DATABASE_HOST=${COMPOSE_PROJECT_DATABASE_HOST:-database}'
-      - 'DATABASE_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}'
-      - 'DATABASE_USER=${COMPOSE_PROJECT_DATABASE_USER:-application}'
-      - 'DATABASE_PASSWORD=${COMPOSE_PROJECT_DATABASE_PASSWORD:-application}'
-      - 'DATABASE_NAME=${COMPOSE_PROJECT_DATABASE_NAME:-application}'
+      LANG: 'C.UTF-8'
+      POSTGRES_USER: '${ORO_DB_USER:-application}'
+      POSTGRES_PASSWORD: '${ORO_DB_PASSWORD:-application}'
+      POSTGRES_DB: '${ORO_DB_NAME:-application}'
     networks:
       - 'appnet'
     depends_on:
