@@ -230,7 +230,7 @@ if echo $1 | grep -i 'export' | grep -i 'db\|database' > /dev/null; then
   if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
     DB_EXPORT_CMD="PGPASSWORD=\$DATABASE_PASSWORD pg_dump -h \$DATABASE_HOST -p \$DATABASE_PORT -U \$DATABASE_USER -d \$DATABASE_NAME"
   elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
-    DB_EXPORT_CMD="MYSQL_PWD=\$DATABASE_PASSWORD mysqldump --column-statistics=0 --set-gtid-purged=OFF --quick --max-allowed-packet=16M --disable-keys --hex-blob --no-autocommit --insert-ignore --skip-lock-tables --single-transaction -h\$DATABASE_HOST -P\$DATABASE_PORT -u\$DATABASE_USER \$DATABASE_NAME | sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/DEFINER=CURRENT_USER \*/'"
+    DB_EXPORT_CMD="MYSQL_PWD=\$DATABASE_PASSWORD mysqldump --no-tablespaces --column-statistics=0 --set-gtid-purged=OFF --quick --max-allowed-packet=16M --disable-keys --hex-blob --no-autocommit --insert-ignore --skip-lock-tables --single-transaction -h\$DATABASE_HOST -P\$DATABASE_PORT -u\$DATABASE_USER \$DATABASE_NAME | sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/DEFINER=CURRENT_USER \*/'"
   fi
 
   echo "/* Starting export of the database... */"
