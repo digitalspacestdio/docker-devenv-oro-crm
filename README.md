@@ -46,63 +46,70 @@ brew install digitalspacestdio/docker-compose-oroplatform/docker-compose-oroplat
 ```
 
 ## Usage
-Clone the application source code
+1. Clone the application source code
 ```bash
 git clone --single-branch --branch 5.0.5 https://github.com/oroinc/orocommerce-application.git ~/orocommerce-application
 ```
 
-Navigate to the directory
+2. Navigate to the directory
 ```bash
 cd ~/orocommerce-application
 ```
 
-Install composer dependencies
+3. Install composer dependencies
 ```bash
 docker-compose-oroplatform composer install -o --no-interaction
 ```
 
-Optionally you change the DB driver in the config file. 
+4. Optionally: Change the database driver in the `config/parameters.yml` file. 
 
-Install the application by following command
+5. Install the application by following command
 ```bash
 docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.' --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
 ```
 
-Optionally import database (supports `*.sql` and `*.sql.gz` files)
+6. Optionally: import database dump (supports `*.sql` and `*.sql.gz` files)
 ```bash
-docker-compose-oroplatform database-import /path/to/dump.sql.gz
+docker-compose-oroplatform import-database /path/to/dump.sql.gz
 ```
 
-Warmup cache
+7. Warmup cache
 ```bash
 docker-compose-oroplatform bin/console cache:warmup
 ```
 
-Start the stack in the background mode
+8. Start the stack in the background mode
 ```bash
 docker-compose-oroplatform up -d
 ```
 
-Start the stack in the foreground mode
-```bash
-docker-compose-oroplatform up
-```
-
 > Application should be available by following link: http://localhost:30180/
 
-Stop the stack
+
+## Shutdown the project stack
+
+Stop containers
 ```bash
 docker-compose-oroplatform down
 ```
 
-Destroy the whole data
+Destroy containers and persistent data
 ```bash
 docker-compose-oroplatform down -v
 ```
 
-You can generate the compose config file to use directly in the docker-compose by following command:
+## Extra tools
+Connecting to the cli container
+```bash
+docker-compose-oroplatform bash
+```
+
+Generate compose config and run directly without this tool
 ```bash
 docker-compose-oroplatform config > docker-compose.yml
+```
+```bash
+docker compose up
 ```
 
 ## Environment Variables
