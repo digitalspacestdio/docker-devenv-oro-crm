@@ -32,15 +32,21 @@ fi
 
 cd "$COMPOSE_PROJECT_APPDIR"
 
-if [[ -f .dockenv ]]; then
+if [[ -f "$COMPOSE_PROJECT_APPDIR/.dockenv" ]]; then
   set -o allexport
-  source .dockenv
+  source "$COMPOSE_PROJECT_APPDIR/.dockenv"
   set +o allexport
 fi
 
-if [[ -f .env ]]; then
+if [[ -f "$COMPOSE_PROJECT_APPDIR/.dockerenv" ]]; then
   set -o allexport
-  source .env
+  source "$COMPOSE_PROJECT_APPDIR/.dockerenv"
+  set +o allexport
+fi
+
+if [[ -f "$COMPOSE_PROJECT_APPDIR/.env" ]]; then
+  set -o allexport
+  source "$COMPOSE_PROJECT_APPDIR/.env"
   set +o allexport
 fi
 
