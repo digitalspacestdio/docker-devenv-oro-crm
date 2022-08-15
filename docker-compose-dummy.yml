@@ -7,6 +7,6 @@ services:
     command: sleep infinity
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: "sh -c 'exit 0'"

@@ -18,7 +18,7 @@ services:
       - '${COMPOSE_PROJECT_PGSQL_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-54}32:5432'
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: "pg_isready -U ${ORO_DB_USER:-application}"
       start_period: 60s

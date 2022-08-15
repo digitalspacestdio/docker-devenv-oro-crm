@@ -22,7 +22,7 @@ services:
       - '${COMPOSE_PROJECT_MYSQL_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-33}06:3306'
     networks:
       - 'appnet'
-    restart: on-failure:3
+    restart: always
     healthcheck:
       test: "mysqladmin ping --silent -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}"
       start_period: 60s
