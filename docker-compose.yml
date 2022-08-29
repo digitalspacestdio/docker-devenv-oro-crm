@@ -24,6 +24,8 @@ services:
     working_dir: '/var/www'
     networks:
       - 'appnet'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - 'ORO_DB_HOST=${COMPOSE_PROJECT_DATABASE_HOST:-database}'
       - 'ORO_DB_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}'
@@ -82,6 +84,8 @@ services:
     working_dir: '/var/www'
     networks:
       - 'appnet'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - 'ORO_DB_HOST=${COMPOSE_PROJECT_DATABASE_HOST:-database}'
       - 'ORO_DB_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}'
