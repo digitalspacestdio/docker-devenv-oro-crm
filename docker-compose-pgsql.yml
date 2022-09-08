@@ -8,9 +8,9 @@ services:
     shm_size: 512m
     environment:
       LANG: 'C.UTF-8'
-      POSTGRES_USER: '${ORO_DB_USER:-application}'
-      POSTGRES_PASSWORD: '${ORO_DB_PASSWORD:-application}'
-      POSTGRES_DB: '${ORO_DB_NAME:-application}'
+      POSTGRES_USER: '${COMPOSE_PROJECT_DATABASE_USER:-application}'
+      POSTGRES_PASSWORD: '${COMPOSE_PROJECT_DATABASE_PASSWORD:-application}'
+      POSTGRES_DB: '${COMPOSE_PROJECT_DATABASE_NAME:-application}'
     volumes:
       - '${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/pgsql/initdb.d:/docker-entrypoint-initdb.d:ro'
       - 'postgresql-data:/var/lib/postgresql/data:delegated'
@@ -20,7 +20,7 @@ services:
       - 'appnet'
     restart: always
     healthcheck:
-      test: "pg_isready -U ${ORO_DB_USER:-application}"
+      test: "pg_isready -U ${COMPOSE_PROJECT_DATABASE_USER:-application}"
       start_period: 60s
       interval: 5s
       retries: 15
