@@ -10,7 +10,7 @@ services:
     environment:
       LANG: 'C.UTF-8'
       MYSQL_ROOT_PASSWORD: 'root'
-      MYSQL_USER: '${COMPOSE_PROJECT_ORO_DB_USER:-application}'
+      MYSQL_USER: '${COMPOSE_PROJECT_DATABASE_USER:-application}'
       MYSQL_PASSWORD: '${COMPOSE_PROJECT_DATABASE_PASSWORD:-application}'
       MYSQL_DATABASE: '${COMPOSE_PROJECT_DATABASE_NAME:-application}'
       MYSQL_ROOT_HOST: '%'
