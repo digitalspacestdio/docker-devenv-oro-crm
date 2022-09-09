@@ -123,3 +123,8 @@ docker compose up
 * `COMPOSE_PROJECT_ELASTICSEARCH_VERSION` - `7.10.2` see https://www.docker.elastic.co/r/elasticsearch/elasticsearch-oss for more versions
 * `COMPOSE_PROJECT_NAME` - by default the working directory name will be used
 * `COMPOSE_PROJECT_PORT_PREFIX` - `302` by default
+
+## Custom Database Credentials 
+* `export COMPOSE_PROJECT_DATABASE_USER="custom"`
+* `export COMPOSE_PROJECT_DATABASE_PASSWORD="custom"`
+* `export COMPOSE_PROJECT_DATABASE_NAME="custom"`
