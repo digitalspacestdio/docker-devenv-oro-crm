@@ -116,6 +116,7 @@ services:
 
   consumer:
     container_name: "${COMPOSE_PROJECT_NAME:-unnamed}_consumer_${COMPOSE_PROJECT_PHP_VERSION:-8.1}-${COMPOSE_PROJECT_NODE_VERSION:-16}-${COMPOSE_PROJECT_COMPOSER_VERSION:-2}"
+    profiles: ["consumer"]
     build:
       context: "${COMPOSE_PROJECT_CONFIG_DIR:-.}/docker/php-node-symfony"
       args:
@@ -278,7 +279,7 @@ services:
         max-size: "10m"
 
   elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:${COMPOSE_PROJECT_ELASTICSEARCH_VERSION-7.10.2}'
+    image: '${COMPOSE_PROJECT_ELASTICSEARCH_IMAGE:-docker.elastic.co/elasticsearch/elasticsearch-oss}:${COMPOSE_PROJECT_ELASTICSEARCH_VERSION:-7.13.2}'
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_elasticsearch
     volumes:
       - "elasticsearch-data:/usr/share/elasticsearch/data:delegated"
