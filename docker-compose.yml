@@ -279,7 +279,7 @@ services:
         max-size: "10m"
 
   elasticsearch:
-    image: '${COMPOSE_PROJECT_ELASTICSEARCH_IMAGE:-docker.elastic.co/elasticsearch/elasticsearch-oss}:${COMPOSE_PROJECT_ELASTICSEARCH_VERSION:-7.13.2}'
+    image: '${COMPOSE_PROJECT_ELASTICSEARCH_IMAGE:-docker.elastic.co/elasticsearch/elasticsearch}:${COMPOSE_PROJECT_ELASTICSEARCH_VERSION:-7.13.2}'
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_elasticsearch
     volumes:
       - "elasticsearch-data:/usr/share/elasticsearch/data:delegated"
