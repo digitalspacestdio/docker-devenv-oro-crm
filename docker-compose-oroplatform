@@ -88,14 +88,18 @@ else
 fi
 
 if [[ -z $ORO_DB_DRIVER ]] && [[ -f "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" ]]; then
-  export ORO_DB_DRIVER=$(echo $(cat "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" | grep 'database_driver:' | awk -F: '{ print $2 }'))
+  export ORO_DB_DRIVER=$(cat "$COMPOSE_PROJECT_APPDIR/config/parameters.yml" | grep 'database_driver:' | awk -F: '{ print $2 }')
 fi
 
-if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
-  if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
+if [[ -z $ORO_DB_DRIVER ]] && [[ -f "$COMPOSE_PROJECT_APPDIR/.env-app" ]]; then
+  export ORO_DB_DRIVER=$(cat "$COMPOSE_PROJECT_APPDIR/.env-app" | grep 'ORO_DB_URL=' | awk -F= '{ print $2 }' | awk -F: '{ print $1 }')
+fi
+
+if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "pdo_mysql" ]] || [[ $ORO_DB_DRIVER == "postgres" ]] || [[ $ORO_DB_DRIVER == "mysql" ]] ;then
+  if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "postgres" ]];then
     export COMPOSE_PROJECT_DATABASE_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-5432}
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-pgsql.yml"
-  elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
+  elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]] || [[ $ORO_DB_DRIVER == "mysql" ]];then
     export COMPOSE_PROJECT_DATABASE_PORT=${COMPOSE_PROJECT_DATABASE_PORT:-3306}
     DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN} -f ${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose-mysql.yml"
   fi
@@ -221,9 +225,9 @@ if echo $1 | grep -i 'import' | grep -i 'db\|database' > /dev/null; then
   fi
 
   DB_DUMP_BASENAME=$(echo "${DB_DUMP##*/}")
-  if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
+  if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "postgres" ]];then
     DB_IMPORT_CMD="PGPASSWORD=\$DATABASE_PASSWORD psql --set ON_ERROR_STOP=on -h \$DATABASE_HOST -p \$DATABASE_PORT -U \$DATABASE_USER -d \$DATABASE_NAME -1 >/dev/null"
-  elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
+  elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]] || [[ $ORO_DB_DRIVER == "mysql" ]];then
     DB_IMPORT_CMD="sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/DEFINER=CURRENT_USER \*/' | MYSQL_PWD=\$DATABASE_PASSWORD mysql -h\$DATABASE_HOST -P\$DATABASE_PORT -u\$DATABASE_USER \$DATABASE_NAME"
   fi
 
@@ -240,9 +244,9 @@ if echo $1 | grep -i 'export\|dump' | grep -i 'db\|database' > /dev/null; then
   DB_DUMP=$COMPOSE_PROJECT_APPDIR/database-$(date +'%Y%m%d%H%M%S').sql.gz
   DB_DUMP_BASENAME=$(echo "${DB_DUMP##*/}")
   touch "${DB_DUMP}"
-  if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]];then
+  if [[ $ORO_DB_DRIVER == "pdo_pgsql" ]] || [[ $ORO_DB_DRIVER == "postgres" ]];then
     DB_EXPORT_CMD="PGPASSWORD=\$DATABASE_PASSWORD pg_dump -Fp --clean --if-exists -h \$DATABASE_HOST -p \$DATABASE_PORT -U \$DATABASE_USER -d \$DATABASE_NAME"
-  elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]];then
+  elif [[ $ORO_DB_DRIVER == "pdo_mysql" ]] || [[ $ORO_DB_DRIVER == "mysql" ]];then
     DB_EXPORT_CMD="MYSQL_PWD=\$DATABASE_PASSWORD mysqldump --no-tablespaces --column-statistics=0 --set-gtid-purged=OFF --quick --max-allowed-packet=16M --disable-keys --hex-blob --no-autocommit --insert-ignore --skip-lock-tables --single-transaction -h\$DATABASE_HOST -P\$DATABASE_PORT -u\$DATABASE_USER \$DATABASE_NAME | sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/DEFINER=CURRENT_USER \*/'"
   fi
 
