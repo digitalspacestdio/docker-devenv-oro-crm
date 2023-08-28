@@ -28,6 +28,7 @@ ARG EXT_XDEBUG_VERSION=3.2.2
 
 # persistent / runtime deps
 RUN apk add --no-cache \
+    linux-headers \
     acl \
     fcgi \
     file \
