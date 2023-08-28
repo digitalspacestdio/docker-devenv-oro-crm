@@ -28,7 +28,6 @@ ARG EXT_XDEBUG_VERSION=3.2.2
 
 # persistent / runtime deps
 RUN apk add --no-cache \
-    linux-headers \
     acl \
     fcgi \
     file \
@@ -48,6 +47,7 @@ RUN apk add --no-cache \
 RUN set -eux; \
   apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
+    linux-headers \
     icu-data-full \
     icu-dev \
     libzip-dev \
