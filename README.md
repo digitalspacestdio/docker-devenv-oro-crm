@@ -1,7 +1,7 @@
 # OroCommerce|OroCRM|OroPlatform Docker Environment
 
 **Supported Systems**
-* MacOs (Intel, Apple M1)
+* MacOs (Intel, Apple Silicon)
 * Linux (AMD64, ARM64)
 * Windows via WSL2 (AMD64)
 
