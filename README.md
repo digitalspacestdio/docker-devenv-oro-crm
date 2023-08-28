@@ -50,35 +50,32 @@ brew install digitalspacestdio/docker-compose-oroplatform/docker-compose-oroplat
 ```bash
 git clone --single-branch --branch 5.1.1 https://github.com/oroinc/orocommerce-application.git ~/orocommerce-application
 ```
-
 2. Navigate to the directory
 ```bash
 cd ~/orocommerce-application
 ```
-
-3. Install composer dependencies
+3. Build docker images
+```bash
+docker-compose-oroplatform build
+```
+4. Install composer dependencies
 ```bash
 docker-compose-oroplatform composer install -o --no-interaction
 ```
-
-4. Optionally: Change the database driver in the `config/parameters.yml` file. 
-
-5. Install the application by following command
+5. Optionally: Change the database driver in the `config/parameters.yml` (or .env-app) file. 
+6. Install the application by following command
 ```bash
 docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.' --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
 ```
-
-6. Optionally: import database dump (supports `*.sql` and `*.sql.gz` files)
+7. Optional: import database dump (supports `*.sql` and `*.sql.gz` files)
 ```bash
 docker-compose-oroplatform import-database /path/to/dump.sql.gz
 ```
-
-7. Warmup cache
+8. Warmup cache
 ```bash
 docker-compose-oroplatform bin/console cache:warmup
 ```
-
-8. Start the stack in the background mode
+9. Start the stack in the background mode
 ```bash
 docker-compose-oroplatform up -d
 ```
