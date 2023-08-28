@@ -48,7 +48,7 @@ brew install digitalspacestdio/docker-compose-oroplatform/docker-compose-oroplat
 ## Usage
 1. Clone the application source code
 ```bash
-git clone --single-branch --branch 5.0.5 https://github.com/oroinc/orocommerce-application.git ~/orocommerce-application
+git clone --single-branch --branch 5.1.1 https://github.com/oroinc/orocommerce-application.git ~/orocommerce-application
 ```
 
 2. Navigate to the directory
