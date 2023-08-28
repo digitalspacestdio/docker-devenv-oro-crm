@@ -285,6 +285,7 @@ services:
       - "elasticsearch-data:/usr/share/elasticsearch/data:delegated"
     environment:
       ES_JAVA_OPTS: '${ES_JAVA_OPTS:--Xms256m -Xmx2048m}'
+      ELASTIC_PASSWORD: elastic
       discovery.type: 'single-node'
     ports:
       - "${COMPOSE_PROJECT_ES_BIND_HOST:-127.0.0.1}:${COMPOSE_PROJECT_PORT_PREFIX:-92}92:9200"
