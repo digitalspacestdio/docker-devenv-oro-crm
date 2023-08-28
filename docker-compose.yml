@@ -51,8 +51,6 @@ services:
         condition: service_healthy
       websocket:
         condition: service_started
-      consumer:
-        condition: service_started
     restart: always
     healthcheck:
       test: /bin/bash -c "</dev/tcp/localhost/9000"
@@ -160,6 +158,8 @@ services:
       elasticsearch:
         condition: service_healthy
       mail:
+        condition: service_healthy
+      fpm:
         condition: service_healthy
     logging:
       driver: "json-file"
