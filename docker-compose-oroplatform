@@ -50,7 +50,7 @@ if [[ -f "$COMPOSE_PROJECT_APPDIR/.env" ]]; then
   set +o allexport
 fi
 
-if [[ -z $COMPOSE_PROJECT_COMPOSER_AUTH ]] && [[ -z $COMPOSER_AUTH ]] && which composer > /dev/null 2>&1; then
+if [[ -z $COMPOSE_PROJECT_COMPOSER_AUTH ]] && [[ -z $COMPOSER_AUTH ]] && which php > /dev/null 2>&1 && which composer > /dev/null 2>&1; then
   COMPOSER_AUTH_JSON=$(composer config --no-interaction --global home 2>/dev/null)/auth.json
   if [[ -f "${COMPOSER_AUTH_JSON}" ]]; then
     COMPOSE_PROJECT_COMPOSER_AUTH=$(cat "${COMPOSER_AUTH_JSON}")
