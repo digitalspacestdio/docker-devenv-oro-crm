@@ -39,6 +39,12 @@ export COMPOSE_PROJECT_COMPOSER_AUTH='{
 }'
 ```
 
+To get the command from local machine use following command:
+```bash
+echo "export COMPOSE_PROJECT_COMPOSER_AUTH='"$(cat $(php -d display_errors=0 $(which composer) config --no-interaction --global home 2>/dev/null)/auth.json)"'"
+```
+
+
 ## Installation
 Install via homebrew by following command
 ```bash
