@@ -74,6 +74,8 @@ fi
 
 rsync -r "${DIR}/" "${COMPOSE_PROJECT_CONFIG_DIR}/"
 
+docker info > /dev/null
+
 DOCKER_COMPOSE_BIN="${DOCKER_COMPOSE_BIN-$(which docker) compose}";
 DOCKER_COMPOSE_VERSION=$($DOCKER_COMPOSE_BIN version | grep '[0-9]\+\.[0-9]\+\.[0-9]\+' -o | awk -F. '{ print $1 }')
 if [[ -f "${COMPOSE_PROJECT_CONFIG_DIR}/docker-compose.yml" ]]; then
