@@ -69,7 +69,7 @@ docker-compose-oroplatform build
 docker-compose-oroplatform composer install -o --no-interaction
 ```
 5. Optionally: Change the database driver in the `config/parameters.yml` (or .env-app) file.
-> example: ORO_DB_URL=postgres://application:application@database:5432/oro_db?sslmode=disable&charset=utf8&serverVersion=13.7
+> example: `ORO_DB_URL=postgres://application:application@database:5432/application?sslmode=disable&charset=utf8&serverVersion=13.7`
 7. Install the application by following command
 ```bash
 docker-compose-oroplatform bin/console --env=prod --timeout=1800 oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.' --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='$ecretPassw0rd' --application-url='http://localhost:30180/' --sample-data=y
